@@ -67,7 +67,7 @@ function setup(THREE, OrbitController, mesh, opt) {
             viewer.scene.add(mesh)
 
         viewer.controls = new OrbitController(viewer.camera)
-
+        
         background = createBackground(viewer.renderer.getContext(), {
             aspect: 1,
             // color1: [1, 1, 1],

@@ -5,17 +5,10 @@ module.exports = function(cb) {
     cb = cb || ()=>{}
 
     var loader = new THREE.JSONLoader(true)
-    loader.load("ball.js", function(geometry) {
+    loader.load("ball.js", function(geometry, materials) {
+        // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2))
         geometry.computeVertexNormals()
 
-        var urls = ['px', 'nx', 'py', 'ny', 'pz', 'nz'].map(function(loc) {
-            return ['img/SwedishRoyalCastle/', loc, '.jpg'].join('')
-        })
-
-        var reflectionCube = THREE.ImageUtils.loadTextureCube(urls)
-        reflectionCube.minFilter = THREE.LinearFilter
-        reflectionCube.magFilter = THREE.LinearFilter
-        reflectionCube.format = THREE.RGBFormat
 
         var nrm = THREE.ImageUtils.loadTexture('img/nrm3.png')
         nrm.wrapS = nrm.wrapT = THREE.RepeatWrapping
@@ -24,21 +17,40 @@ module.exports = function(cb) {
         tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping
         tex.minFilter = tex.magFilter = THREE.LinearFilter
 
+        var mat = material(tex, nrm, 1.0)
+        var capMat = material(tex, nrm, 0.0)
+
+        var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial([
+            capMat, capMat, mat
+        ]))
+        cb(null, mesh)
+    })
+
+
+
+    function material(matCapTex, normalTex, seethru) {
+        var nrm = normalTex
+        var tex = matCapTex
+
         var mat = new THREE.ShaderMaterial(matcap({
             normalMap: nrm,
+            blending: THREE.NormalBlending,
+            transparent: true,
             tMatCap: tex
         }));
         mat.uniforms.combine.value = 2
-        mat.uniforms.envMap.value = reflectionCube
-        mat.uniforms.reflectivity.value = 0.70
+        // mat.uniforms.envMap.value = reflectionCube
+        mat.uniforms.reflectivity.value = 0.5
         mat.uniforms.shininess.value = 70
-        mat.uniforms.diffuse.value = new THREE.Color(0xefefef)
+        mat.uniforms.diffuse.value = new THREE.Color(0xffffff)
+        // mat.uniforms.diffuse.value = new THREE.Color(0x737373)
         mat.uniforms.tMatCap.value = tex
+        mat.uniforms.refractionRatio.value = 0.9
+        mat.uniforms.flipEnvMap.value = 1
         mat.normalMap = nrm
-        mat.uniforms.normalScale.value.multiplyScalar(0.03)
+        mat.uniforms.normalScale.value.multiplyScalar(0.02)
+        mat.uniforms.seethru.value = seethru
         mat.needsUpdate = true
-        
-        var mesh = new THREE.Mesh(geometry, mat)
-        cb(null, mesh)
-    })
+        return mat
+    }
 }

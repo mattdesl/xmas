@@ -9,19 +9,14 @@ var fs = require('fs')
 // var mesh = new THREE.Mesh(box, mat)
 
 require('./create-mesh')(function(err, mesh) {
-    var viewer = create(mesh)
+    var viewer = create()
+    var tmp = new THREE.Vector3()
+    var UNIT_X = new THREE.Vector3(0, 0, 1)
+    
+    viewer.controls.target.set(0, 4, 0)
+    viewer.camera.position.set(5, 8, 5)
 
-    viewer.scene.fog = new THREE.FogExp2(0xeeeeee, 0.2)
+    // viewer.scene.fog = new THREE.FogExp2(0xeeeeee, 0.2)
     require('./add-lights')(viewer.scene)
-    var syncFloor = require('./add-floor')(viewer.scene)
-
-    var t = 0
-    viewer.on('tick', function() {
-        t += 1/60
-
-        mesh.position.x = Math.sin(Math.cos(t))
-        mesh.position.y = Math.sin(t)*1.5
-        mesh.position.z = Math.sin(t)*0.5
-        syncFloor(mesh)
-    })
+    require('./scene')(viewer, mesh)
 })

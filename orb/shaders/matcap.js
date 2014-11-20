@@ -30,8 +30,6 @@ vec3 perturbNormal2Arb( vec3 eye_pos, vec3 surf_norm ) {
 
 #endif
 `
-
-
 module.exports = function(opt) {
     opt = opt||{}
 
@@ -49,6 +47,7 @@ module.exports = function(opt) {
                 "emissive" : { type: "c", value: new THREE.Color( 0x000000 ) },
                 "specular" : { type: "c", value: new THREE.Color( 0x111111 ) },
                 "shininess": { type: "f", value: 30 },
+                "seethru": { type: "f", value: 0 },
                 "wrapRGB"  : { type: "v3", value: new THREE.Vector3( 1, 1, 1 ) },
                 "tMatCap"  : { type: "t", value: opt.tMatCap || new THREE.Texture() }
             }
@@ -64,6 +63,7 @@ module.exports = function(opt) {
 
             "varying vec2 vUv;",
             "uniform vec4 offsetRepeat;",
+
 
             THREE.ShaderChunk[ "lightmap_pars_vertex" ],
             THREE.ShaderChunk[ "envmap_pars_vertex" ],
@@ -115,12 +115,13 @@ module.exports = function(opt) {
             "uniform vec3 emissive;",
             "uniform vec3 specular;",
             "uniform float shininess;",
+            "uniform float seethru;",
             "varying vec3 matCapE;",
             "uniform sampler2D tMatCap;",
 
             THREE.ShaderChunk[ "color_pars_fragment" ],
             
-            THREE.ShaderChunk[ "map_pars_vertex" ],
+            THREE.ShaderChunk[ "map_pars_fragment" ],
             THREE.ShaderChunk[ "alphamap_pars_fragment" ],
             THREE.ShaderChunk[ "lightmap_pars_fragment" ],
             THREE.ShaderChunk[ "envmap_pars_fragment" ],
@@ -139,8 +140,6 @@ module.exports = function(opt) {
                 THREE.ShaderChunk[ "logdepthbuf_fragment" ],
                 THREE.ShaderChunk[ "map_fragment" ],
 
-
-                
                 THREE.ShaderChunk[ "alphamap_fragment" ],
                 THREE.ShaderChunk[ "alphatest_fragment" ],
                 THREE.ShaderChunk[ "specularmap_fragment" ],
@@ -149,24 +148,28 @@ module.exports = function(opt) {
 
 
                 "vec3 r = reflect( matCapE, normal );",
+
+
                 // "r = matCapE - 2. * dot( normal, matCapE ) * normal;",
                 "float m = 2. * sqrt( pow( r.x, 2. ) + pow( r.y, 2. ) + pow( r.z + 1., 2. ) );",
                 "vec2 vN = r.xy / m + .5;",
                 "vec3 matCapColor = texture2D( tMatCap, vN ).rgb;",
+
+
                 "gl_FragColor.rgb = mix(gl_FragColor.rgb, gl_FragColor.rgb * matCapColor, 1.0);",
                     
                 "float rimval = 1.0 * smoothstep(-1.0, 1.0, normal.y);",
                 "float rimPower = 2.0;",
                 "float rimf = rimPower * abs(dot(normal, matCapE));",
-                "rimf = rimval * (1. - smoothstep(0.0, 1.0, rimf));",
-                "gl_FragColor.rgb += vec3(rimf)*0.25;",
+                "float rimFade = rimval * (1. - smoothstep(0.0, 1.0, rimf));",
+                "gl_FragColor.rgb += vec3(rimFade)*0.25;",
 
                 THREE.ShaderChunk[ "lightmap_fragment" ],
                 THREE.ShaderChunk[ "color_fragment" ],
 
-                THREE.ShaderChunk[ "envmap_fragment" ],
+                // THREE.ShaderChunk[ "envmap_fragment" ],
 
-                
+                "gl_FragColor.a *= (1.0 - smoothstep(0.0, 3.0, rimf)*seethru);",
 
                 THREE.ShaderChunk[ "shadowmap_fragment" ],
 
@@ -179,7 +182,8 @@ module.exports = function(opt) {
         ].join("\n"),
         defines: {
             USE_ENVMAP:"",
-            USE_FOG:""
+            USE_FOG:"",
+            // USE_MAP:""
         },
         lights: true
     }, opt)
