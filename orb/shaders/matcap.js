@@ -148,10 +148,8 @@ module.exports = function(opt) {
 
 
                 "vec3 r = reflect( matCapE, normal );",
-
-
-                // "r = matCapE - 2. * dot( normal, matCapE ) * normal;",
-                "float m = 2. * sqrt( pow( r.x, 2. ) + pow( r.y, 2. ) + pow( r.z + 1., 2. ) );",
+                "r.z += 1.0;",
+                "float m = 2. * length(r);",
                 "vec2 vN = r.xy / m + .5;",
                 "vec3 matCapColor = texture2D( tMatCap, vN ).rgb;",
 
@@ -176,7 +174,7 @@ module.exports = function(opt) {
                 THREE.ShaderChunk[ "linear_to_gamma_fragment" ],
 
                 THREE.ShaderChunk[ "fog_fragment" ],
-
+                // "gl_FragColor = vec4(vec3(m), 1.0);",
 
             "}"
         ].join("\n"),

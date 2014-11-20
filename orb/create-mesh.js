@@ -4,21 +4,28 @@ var matcap = require('./shaders/matcap')
 module.exports = function(cb) {
     cb = cb || ()=>{}
 
+    var reflectionCube = require('./get-cube')()
+
+
     var loader = new THREE.JSONLoader(true)
     loader.load("ball.js", function(geometry, materials) {
         // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2))
         geometry.computeVertexNormals()
 
 
+
         var nrm = THREE.ImageUtils.loadTexture('img/nrm3.png')
         nrm.wrapS = nrm.wrapT = THREE.RepeatWrapping
+        nrm.minFilter = nrm.magFilter = THREE.LinearFilter
+        nrm.generateMipmaps = false
 
         var tex = THREE.ImageUtils.loadTexture('img/mcap3.png') //mcap1, mcap4
         tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping
         tex.minFilter = tex.magFilter = THREE.LinearFilter
+        tex.generateMipmaps = false
 
-        var mat = material(tex, nrm, 1.0)
-        var capMat = material(tex, nrm, 0.0)
+        var mat = material(tex, nrm, reflectionCube, 1.0)
+        var capMat = material(tex, nrm, reflectionCube, 0.0)
 
         var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial([
             capMat, capMat, mat
@@ -28,7 +35,7 @@ module.exports = function(cb) {
 
 
 
-    function material(matCapTex, normalTex, seethru) {
+    function material(matCapTex, normalTex, envMap, seethru) {
         var nrm = normalTex
         var tex = matCapTex
 
@@ -39,8 +46,8 @@ module.exports = function(cb) {
             tMatCap: tex
         }));
         mat.uniforms.combine.value = 2
-        // mat.uniforms.envMap.value = reflectionCube
-        mat.uniforms.reflectivity.value = 0.5
+        mat.uniforms.envMap.value = envMap
+        mat.uniforms.reflectivity.value = 1
         mat.uniforms.shininess.value = 70
         mat.uniforms.diffuse.value = new THREE.Color(0xffffff)
         // mat.uniforms.diffuse.value = new THREE.Color(0x737373)

@@ -21,6 +21,7 @@
     "canvas-testbed": "^1.0.3",
     "clamp": "^1.0.1",
     "delaunay-triangulate": "^1.1.6",
+    "eases": "^1.0.2",
     "events": "^1.0.2",
     "extract-svg-path": "^1.0.0",
     "frontend-npm-goodies": "git://github.com/mattdesl/frontend-npm-goodies",

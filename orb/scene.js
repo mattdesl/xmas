@@ -5,19 +5,21 @@ var Floor = require('./create-floor')
 var syncFloor = require('./sync-floor')
 var lerp = require('lerp')
 
-
 module.exports = function(viewer, mesh) {
     var floor = Floor()
-    var t
+    var t = 0
+    var START = 4
 
     viewer.scene.add(floor)
 
-    mesh.position.y = 4
+    mesh.position.y = START
 
 
     var sphere = new THREE.SphereGeometry(1.15, 50, 50)
+    var tex = THREE.ImageUtils.loadTexture('img/earth1-small.jpg')
+
     var mat = new THREE.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture('img/earth1-medium.jpg'),
+        map: tex,
         fog: false
     })
     var earth = new THREE.Mesh(sphere, mat)
@@ -34,6 +36,9 @@ module.exports = function(viewer, mesh) {
     function update(dt) {
         t += dt
 
+        var spd = 0.04
+        earth.rotation.y += dt * spd
+        mesh.position.y = Math.sin(t*0.5) * 0.1 + START
         earth.position.copy(mesh.position)
         syncFloor(floor, mesh)
     }

@@ -17,7 +17,8 @@ function setup(THREE, OrbitController, mesh, opt) {
     opt = opt||{}
     createApp(render, start, {
         context: 'webgl',
-        onResize: handleResize
+        onResize: handleResize,
+        retina: false
     })
 
     var background, bgStyle = { scale: [1, 1] }
@@ -72,7 +73,7 @@ function setup(THREE, OrbitController, mesh, opt) {
             aspect: 1,
             // color1: [1, 1, 1],
             // color2: [0.25, 0.25, 0.25],
-            color2: [0.1, 0.1, 0.1],
+            color2: [0.02, 0.02, 0.02],
             color1: [0.2, 0.2, 0.2],
             smoothing: [ -0.5, 1.0 ],
             noiseAlpha: 0.05,
