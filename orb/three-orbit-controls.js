@@ -1,3 +1,6 @@
+var inherits = require('inherits')
+var TweenMax = require('gsap')
+
 module.exports = function(THREE) {
     if (!THREE.MOUSE)
         THREE.MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
@@ -26,6 +29,7 @@ module.exports = function(THREE) {
     // Simple substitute "OrbitControls" and the control should work as-is.
 
     function OrbitControls( object, domElement ) {
+
         this.object = object;
         this.domElement = ( domElement !== undefined ) ? domElement : document;
 
@@ -70,8 +74,15 @@ module.exports = function(THREE) {
         // Set to true to disable use of the keys
         this.noKeys = false;
 
+        this.phi = 0
+        this.theta = 0 
+
+        this.rotateOffset = { phi: 0, theta: 0 }
+
         // The four arrow keys
         this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+
+        this.constrainDelta = { x: 0, y: 0 };
 
         ////////////
         // internals
@@ -235,6 +246,12 @@ module.exports = function(THREE) {
 
             var position = this.object.position;
 
+            // // rotating across whole screen goes 360 degrees around
+            scope.rotateLeft( 2 * Math.PI * scope.constrainDelta.x / window.innerWidth * scope.rotateSpeed );
+
+            // // rotating up and down along whole screen attempts to go 360, but limited to 180
+            scope.rotateUp( 2 * Math.PI * scope.constrainDelta.y / window.innerHeight * scope.rotateSpeed * 0.75 );
+
             offset.copy( position ).sub( this.target );
 
             // rotate offset to "y-axis-is-up" space
@@ -270,6 +287,9 @@ module.exports = function(THREE) {
             
             // move target to panned location
             this.target.add( pan );
+
+            scope.phi = phi
+            scope.theta = theta
 
             offset.x = radius * Math.sin( phi ) * Math.sin( theta );
             offset.y = radius * Math.cos( phi );
@@ -370,11 +390,16 @@ module.exports = function(THREE) {
                 rotateEnd.set( event.clientX, event.clientY );
                 rotateDelta.subVectors( rotateEnd, rotateStart );
 
-                // rotating across whole screen goes 360 degrees around
-                scope.rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
-
-                // rotating up and down along whole screen attempts to go 360, but limited to 180
-                scope.rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed );
+                scope.constrainDelta.x = rotateDelta.x;
+                scope.constrainDelta.y = rotateDelta.y;
+                
+                TweenMax.killTweensOf(scope.constrainDelta);
+                TweenMax.to(scope.constrainDelta, 0.45, {
+                    x: 0,
+                    y: 0,
+                    ease: 'easeOutQuad',
+                    delay: 0.0
+                });
 
                 rotateStart.copy( rotateEnd );
 
@@ -640,6 +665,6 @@ module.exports = function(THREE) {
 
     };
 
-    OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype)
+    inherits(OrbitControls, THREE.EventDispatcher)
     return OrbitControls
 }

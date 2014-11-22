@@ -18,7 +18,7 @@ function setup(THREE, OrbitController, mesh, opt) {
     createApp(render, start, {
         context: 'webgl',
         onResize: handleResize,
-        retina: false
+        // retina: false
     })
 
     var background, bgStyle = { scale: [1, 1] }
@@ -44,7 +44,7 @@ function setup(THREE, OrbitController, mesh, opt) {
         viewer.controls.update()
         viewer.renderer.render(viewer.scene, viewer.camera)
 
-        viewer.emit('tick')
+        viewer.emit('tick', dt)
     }
 
     function start(gl, width, height) {
@@ -55,7 +55,9 @@ function setup(THREE, OrbitController, mesh, opt) {
         })
         viewer.renderer.setClearColor(0x000000, 1.0)
         viewer.renderer.autoClear = false
-
+        viewer.width = width
+        viewer.height = height
+        
         opt.fov = number(opt.fov, 50)
         opt.near = number(opt.near, 0.01)
         opt.far = number(opt.far, 1000)
@@ -68,21 +70,23 @@ function setup(THREE, OrbitController, mesh, opt) {
             viewer.scene.add(mesh)
 
         viewer.controls = new OrbitController(viewer.camera)
-        
+
         background = createBackground(viewer.renderer.getContext(), {
             aspect: 1,
             // color1: [1, 1, 1],
             // color2: [0.25, 0.25, 0.25],
             color2: [0.02, 0.02, 0.02],
-            color1: [0.2, 0.2, 0.2],
+            color1: [0.12, 0.12, 0.12],
             smoothing: [ -0.5, 1.0 ],
-            noiseAlpha: 0.05,
+            noiseAlpha: 0.4,
             offset: [ -0.05, -0.15 ]
         })
     }
 
     function handleResize(width, height) {
         viewer.renderer.setViewport(0,0,width,height)
+        viewer.width = width
+        viewer.height = height
         viewer.camera.aspect = width/height
         viewer.camera.updateProjectionMatrix()
     }
