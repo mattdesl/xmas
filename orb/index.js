@@ -28,7 +28,6 @@ require('domready')(function() {
         viewer.controls.maxDistance = 7
         viewer.camera.position.set(0, 8, 5)
             
-
         TweenMax.to(viewer.camera.position, 1, {
             x: 5, ease: 'easeOutQuart', delay: 0
         })
