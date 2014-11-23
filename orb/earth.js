@@ -4,7 +4,6 @@ var array = require('array-range')
 var syncFloor = require('./sync-floor')
 var lerp = require('lerp')
 
-var mouse = require('touch-position').emitter()
 var TweenMax = require('gsap')
 
 var blendShader = require('./shaders/blend')
@@ -13,11 +12,11 @@ var tmpSphere = new THREE.Sphere()
 var earthURL = require('./texture-cache')('img/earth1-small.jpg')
 var config = require('./config')
 
+var mouse = require('./mouse')
+
 module.exports = function(viewer, mesh) {
     var t = 0
     var START = config.startPosition
-    var mouseVec = new THREE.Vector3()
-    var raycaster = new THREE.Raycaster()
     var mouseCastPos = new THREE.Vector3()
     var mouseOrigin = new THREE.Vector3()
 
@@ -73,35 +72,27 @@ module.exports = function(viewer, mesh) {
 
     function update(dt) {
         t += dt
-        var mousePos = mouse.position
-        var width = viewer.width, 
-            height = viewer.height
-
-        mouseVec.set(mousePos[0]/width * 2 - 1, -mousePos[1]/height * 2 + 1, 0.5)
+        
 
         var spd = 0.04
         earth.rotation.y += dt * spd
-        // mesh.position.y = Math.sin(t*0.5) * 0.1 + START
         earth.position.copy(mesh.position)
-        // syncFloor(floor, mesh)
-            
-        mouseVec.unproject(viewer.camera)
-        mouseVec.sub(viewer.camera.position).normalize()
-        raycaster.set(viewer.camera.position, mouseVec)
+        
+        mouse.update(viewer)
 
         var lerpSpeed = 0.02
         var boundingSphere = sphere.boundingSphere
         tmpSphere.copy(boundingSphere)
         tmpSphere.applyMatrix4(earth.matrixWorld)
-        if (raycaster.ray.isIntersectionSphere(tmpSphere)) {
+        if (mouse.raycaster.ray.isIntersectionSphere(tmpSphere)) {
             lerpSpeed = 0.1
-            raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
+            mouse.raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
         } else {
-            mouseVec.set(0, 0, 0.5)
-            mouseVec.unproject(viewer.camera)
-            mouseVec.sub(viewer.camera.position).normalize()
-            raycaster.set(viewer.camera.position, mouseVec)
-            raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
+            mouse.vector.set(0, 0, 0.5)
+            mouse.vector.unproject(viewer.camera)
+            mouse.vector.sub(viewer.camera.position).normalize()
+            mouse.raycaster.set(viewer.camera.position, mouse.vector)
+            mouse.raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
         }
         
         mouseOrigin.lerp(mouseCastPos, lerpSpeed)

@@ -329,6 +329,10 @@ module.exports = function(THREE) {
 
         };
 
+        this.isRotating = function() {
+            return state === STATE.ROTATE
+        };
+
         function getAutoRotationAngle() {
 
             return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
@@ -580,12 +584,27 @@ module.exports = function(THREE) {
                     rotateEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
                     rotateDelta.subVectors( rotateEnd, rotateStart );
 
-                    // rotating across whole screen goes 360 degrees around
-                    scope.rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
-                    // rotating up and down along whole screen attempts to go 360, but limited to 180
-                    scope.rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed );
+                    // // rotating across whole screen goes 360 degrees around
+                    // scope.rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
+                    // // rotating up and down along whole screen attempts to go 360, but limited to 180
+                    // scope.rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed );
+
+                    // rotateStart.copy( rotateEnd );
+
+
+                    scope.constrainDelta.x = rotateDelta.x;
+                    scope.constrainDelta.y = rotateDelta.y;
+                    
+                    TweenMax.killTweensOf(scope.constrainDelta);
+                    TweenMax.to(scope.constrainDelta, 0.45, {
+                        x: 0,
+                        y: 0,
+                        ease: 'easeOutQuad',
+                        delay: 0.0
+                    });
 
                     rotateStart.copy( rotateEnd );
+
 
                     scope.update();
                     break;

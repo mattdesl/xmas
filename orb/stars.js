@@ -9,7 +9,8 @@ module.exports = function(viewer) {
     var box = new THREE.BoxGeometry(1, 1, 1)
     var mat = new THREE.MeshBasicMaterial({ 
         color: 0xffffff,
-        transparent: true
+        transparent: true,
+        fog: false
     })
 
     var delay = config.startDelay + 0.25

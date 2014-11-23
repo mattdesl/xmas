@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "6to5-browserify": "^1.1.0",
+    "add-event-listener": "0.0.1",
     "array-range": "^1.0.1",
     "as-number": "^1.0.0",
     "bluebird": "^2.3.11",
@@ -47,6 +48,7 @@
     "inherits": "^2.0.1",
     "lerp": "^1.0.0",
     "mesh-viewer": "^1.0.0",
+    "mouse-event-offset": "^2.0.0",
     "mouse-position": "^1.0.0",
     "normalize-path-scale": "^1.1.0",
     "normals": "^0.1.0",

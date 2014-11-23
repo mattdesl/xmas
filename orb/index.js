@@ -12,7 +12,7 @@ var cache = require('./texture-cache')
 var config = require('./config')
 
 require('domready')(function() {
-    document.body.style.background = '#171c10'
+    document.body.style.background = 'white'
 
     var viewer = create()
 
@@ -23,6 +23,8 @@ require('domready')(function() {
     ]).spread( (images, mesh, gift) => {
         var tmp = new THREE.Vector3()
                 
+        viewer.scene.fog = new THREE.FogExp2(0x000000, 0.05)
+
         viewer.controls.target.set(0, 0, 0)
         viewer.controls.zoomSpeed = 0.1
         viewer.controls.rotateSpeed = 0.4
@@ -40,7 +42,6 @@ require('domready')(function() {
         require('./stars')(viewer)
         createEarth(viewer, mesh)
         require('./add-gifts')(viewer, gift)
-
 
 
     })

@@ -3,7 +3,6 @@ var createApp = require('canvas-testbed')
 var number = require('as-number')
 var MakeOrbitController = require('./three-orbit-controls')
 var createBackground = require('gl-vignette-background')
-var clear = require('gl-clear')({color: 0xffffff})
 var Emitter = require('events/')
 
 module.exports = function(THREE) {
@@ -22,17 +21,22 @@ function setup(THREE, OrbitController, mesh, opt) {
     })
 
     var background, bgStyle = { scale: [1, 1] }
+    var dpr = window.devicePixelRatio||1
 
     return viewer
 
     function render(gl, width, height, dt) {
         gl.disable(gl.DEPTH_TEST)
         gl.disable(gl.CULL_FACE)
+        var pad = 20 * dpr
         
-        clear(gl)
+        // clear(gl)
+        viewer.renderer.clear()
 
         gl.enable(gl.BLEND)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+        viewer.renderer.enableScissorTest(true)
+        viewer.renderer.setScissor(pad, pad, width*dpr - pad*2, height*dpr - pad*2)
 
         var radius = Math.max(width, height) * 1.05
         bgStyle.scale[0] = 1/width * radius
@@ -43,15 +47,19 @@ function setup(THREE, OrbitController, mesh, opt) {
         viewer.renderer.resetGLState()
         viewer.controls.update()
 
-        viewer.cubeIgnores.forEach(function(mesh) {
-            mesh.visible = false
-        })
-        viewer.cubeCamera.updateCubeMap(viewer.renderer, viewer.scene);
-        viewer.cubeIgnores.forEach(function(mesh) {
-            mesh.visible = true
-        })
+        // viewer.renderer.enableScissorTest(true)
+        // viewer.renderer.setScissor(pad, pad, width*dpr, height*dpr)
 
-        viewer.renderer.setViewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+        // viewer.cubeIgnores.forEach(function(mesh) {
+        //     mesh.visible = false
+        // })
+        // viewer.renderer.clearTarget(viewer.cubeCamera.renderTarget, true, true, false)
+        // viewer.cubeCamera.updateCubeMap(viewer.renderer, viewer.scene);
+        // viewer.cubeIgnores.forEach(function(mesh) {
+        //     mesh.visible = true
+        // })
+        // viewer.renderer.setViewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+            
         viewer.renderer.render(viewer.scene, viewer.camera)
 
         viewer.emit('tick', dt)
@@ -61,14 +69,15 @@ function setup(THREE, OrbitController, mesh, opt) {
         viewer.renderer = new THREE.WebGLRenderer({
             canvas: gl.canvas,
             width: width,
+            alpha: false,
             height: height,
         })
-        viewer.renderer.setClearColor(0x000000, 1.0)
+        viewer.renderer.setClearColor(0xffffff, 1.0)
         viewer.renderer.autoClear = false
         viewer.width = width
         viewer.height = height
         
-        opt.fov = number(opt.fov, 50)
+        opt.fov = number(opt.fov, 45)
         opt.near = number(opt.near, 0.01)
         opt.far = number(opt.far, 1000)
         viewer.camera = new THREE.PerspectiveCamera(opt.fov, width/height, opt.near, opt.far)
