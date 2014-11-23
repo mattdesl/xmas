@@ -1,25 +1,26 @@
 var THREE = require('three')
 var matcap = require('./shaders/matcap')
+var cache = require('./texture-cache')
+
+var normUrl = cache('img/nrm3.png')
+var matCapUrl = cache('img/mcap3.png')
 
 module.exports = function(cb) {
     cb = cb || ()=>{}
 
     var reflectionCube = require('./get-cube')()
 
-
     var loader = new THREE.JSONLoader(true)
     loader.load("ball.js", function(geometry, materials) {
         // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2))
         geometry.computeVertexNormals()
 
-
-
-        var nrm = THREE.ImageUtils.loadTexture('img/nrm3.png')
+        var nrm = THREE.ImageUtils.loadTexture(normUrl)
         nrm.wrapS = nrm.wrapT = THREE.RepeatWrapping
         nrm.minFilter = nrm.magFilter = THREE.LinearFilter
         nrm.generateMipmaps = false
 
-        var tex = THREE.ImageUtils.loadTexture('img/mcap3.png') //mcap1, mcap4
+        var tex = THREE.ImageUtils.loadTexture(matCapUrl) //mcap1, mcap4
         tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping
         tex.minFilter = tex.magFilter = THREE.LinearFilter
         tex.generateMipmaps = false
@@ -32,7 +33,6 @@ module.exports = function(cb) {
         ]))
         cb(null, mesh)
     })
-
 
 
     function material(matCapTex, normalTex, envMap, seethru) {

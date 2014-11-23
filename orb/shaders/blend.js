@@ -30,7 +30,7 @@ module.exports = function (opt) {
             "varying vec4 vWorldPos1;",
 
             "void main() {",
-
+            
                 THREE.ShaderChunk[ "map_vertex" ],
                 THREE.ShaderChunk[ "lightmap_vertex" ],
                 THREE.ShaderChunk[ "color_vertex" ],
