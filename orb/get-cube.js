@@ -37,6 +37,10 @@ module.exports = function() {
         return ['img/SwedishRoyalCastle/', loc, '.jpg'].join('')
     })
 
+    // var urls = require('array-range')(6).map(function() {
+    //     return 'img/space/pz.jpg'
+    // })
+
     var reflectionCube = THREE.ImageUtils.loadTextureCube(urls)
     reflectionCube.minFilter = THREE.LinearFilter
     reflectionCube.magFilter = THREE.LinearFilter

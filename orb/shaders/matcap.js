@@ -165,7 +165,7 @@ module.exports = function(opt) {
                 THREE.ShaderChunk[ "lightmap_fragment" ],
                 THREE.ShaderChunk[ "color_fragment" ],
 
-                // THREE.ShaderChunk[ "envmap_fragment" ],
+                THREE.ShaderChunk[ "envmap_fragment" ],
 
                 "gl_FragColor.a *= (1.0 - smoothstep(0.0, 3.0, rimf)*seethru);",
 

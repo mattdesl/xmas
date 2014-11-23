@@ -11,10 +11,11 @@ var blendShader = require('./shaders/blend')
 var tmpSphere = new THREE.Sphere()
 
 var earthURL = require('./texture-cache')('img/earth1-small.jpg')
+var config = require('./config')
 
 module.exports = function(viewer, mesh) {
     var t = 0
-    var START = 4
+    var START = config.startPosition
     var mouseVec = new THREE.Vector3()
     var raycaster = new THREE.Raycaster()
     var mouseCastPos = new THREE.Vector3()
@@ -43,11 +44,13 @@ module.exports = function(viewer, mesh) {
     viewer.scene.add(earth)
     viewer.scene.add(mesh)
 
+    viewer.cubeIgnores.push(earth, mesh)
+
     var s = 0.001
     earth.scale.set(s,s,s)
     mesh.scale.set(s,s,s)
 
-    var delay = 0.75
+    var delay = config.startDelay + 0.25
     TweenMax.fromTo(earth.rotation, 1.0, { y: -Math.PI*0.5 }, {
         y: 0, delay: delay, ease: "easeOutQuart"
     })

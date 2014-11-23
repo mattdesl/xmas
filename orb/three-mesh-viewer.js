@@ -42,6 +42,16 @@ function setup(THREE, OrbitController, mesh, opt) {
 
         viewer.renderer.resetGLState()
         viewer.controls.update()
+
+        viewer.cubeIgnores.forEach(function(mesh) {
+            mesh.visible = false
+        })
+        viewer.cubeCamera.updateCubeMap(viewer.renderer, viewer.scene);
+        viewer.cubeIgnores.forEach(function(mesh) {
+            mesh.visible = true
+        })
+
+        viewer.renderer.setViewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
         viewer.renderer.render(viewer.scene, viewer.camera)
 
         viewer.emit('tick', dt)
@@ -70,6 +80,11 @@ function setup(THREE, OrbitController, mesh, opt) {
             viewer.scene.add(mesh)
 
         viewer.controls = new OrbitController(viewer.camera)
+        viewer.cubeIgnores = []
+        viewer.cubeCamera = new THREE.CubeCamera( opt.near, opt.far, 256 )
+        viewer.cubeCamera.renderTarget.minFilter = THREE.LinearFilter
+        viewer.cubeCamera.renderTarget.generateMipmaps = false
+        viewer.scene.add(viewer.cubeCamera);
 
         background = createBackground(viewer.renderer.getContext(), {
             aspect: 1,
