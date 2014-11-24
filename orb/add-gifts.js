@@ -65,7 +65,6 @@ module.exports = function(viewer, gift) {
         hover.visible = false
         mesh.position.y = -0.4 //fix model to origin
         
-
         var pos = random([0, 0, 0], 10)
         meshObj.position.fromArray(pos)
         meshObj.rotation.x = randf(-Math.PI*2, Math.PI*2)

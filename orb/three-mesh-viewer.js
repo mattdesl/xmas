@@ -13,6 +13,8 @@ module.exports = function(THREE) {
 function setup(THREE, OrbitController, mesh, opt) {
     var viewer = new Emitter()
 
+    viewer.margin = 0
+
     opt = opt||{}
     createApp(render, start, {
         context: 'webgl',
@@ -28,15 +30,16 @@ function setup(THREE, OrbitController, mesh, opt) {
     function render(gl, width, height, dt) {
         gl.disable(gl.DEPTH_TEST)
         gl.disable(gl.CULL_FACE)
-        var pad = 20 * dpr
+        var pad = viewer.margin 
         
-        // clear(gl)
+        viewer.renderer.enableScissorTest(false)
         viewer.renderer.clear()
 
         gl.enable(gl.BLEND)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+        
         viewer.renderer.enableScissorTest(true)
-        viewer.renderer.setScissor(pad, pad, width*dpr - pad*2, height*dpr - pad*2)
+        viewer.renderer.setScissor(pad, pad, width - pad*2, height - pad*2)
 
         var radius = Math.max(width, height) * 1.05
         bgStyle.scale[0] = 1/width * radius
@@ -63,6 +66,7 @@ function setup(THREE, OrbitController, mesh, opt) {
         viewer.renderer.render(viewer.scene, viewer.camera)
 
         viewer.emit('tick', dt)
+        viewer.emit('text', dt)
     }
 
     function start(gl, width, height) {
