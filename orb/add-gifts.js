@@ -13,7 +13,7 @@ var mouseOffset = require('mouse-event-offset')
 var World = require('verlet-system/3d')
 var Point = require('verlet-point/3d')
 var mouse = require('./mouse')
-var addEvent = require('add-event-listener')
+var mobile = require('./is-mobile')
 
 var tmpSphere = new THREE.Sphere()
 var MIN_SCALE = 0.0001
@@ -34,7 +34,8 @@ module.exports = function(viewer, gift) {
     geoSphere.computeBoundingSphere()
     // gift.geometry.computeBoundingSphere()
 
-    var gifts = array(100).map(function(i) {
+    var amount = mobile ? 50 : 100
+    var gifts = array(amount).map(function(i) {
         var mesh = gift.clone()
 
         var newMats = mesh.material.materials.map(function(mat) {
@@ -64,7 +65,7 @@ module.exports = function(viewer, gift) {
 
         hover.visible = false
         mesh.position.y = -0.4 //fix model to origin
-        
+
         var pos = random([0, 0, 0], 10)
         meshObj.position.fromArray(pos)
         meshObj.rotation.x = randf(-Math.PI*2, Math.PI*2)
@@ -186,44 +187,6 @@ module.exports = function(viewer, gift) {
             lastPosition.fromArray(mouse.position)
         })
 
-    }
-
-    function setupFling() {
-        var start = new THREE.Vector2(),
-            end = new THREE.Vector2()
-        var panOffset = new THREE.Vector3()
-
-        addEvent(window, 'mousedown', function(ev) {
-            start.copy(mouseOffset(ev))
-            dragIdx = newHover
-        })
-
-
-        addEvent(window, 'mouseup', function(ev) {
-            end.copy(mouseOffset(ev))
-
-            var strength = end.distanceTo(start) / window.innerWidth
-            strength = clamp(strength, 0, 1)
-            strength *= 0.25
-
-
-            if (dragIdx !== -1) {
-                var te = viewer.camera.matrix.elements
-
-                // get X column of matrix
-                // panOffset.set( te[ 0 ], te[ 1 ], te[ 2 ] )
-                // panOffset.multiplyScalar(end.x > 0 ? strength : -strength)
-                // points[dragIdx].addForce(panOffset.toArray())
-
-                // // get Y column of matrix
-                // panOffset.set( te[ 4 ], te[ 5 ], te[ 6 ] )
-                // panOffset.multiplyScalar(end.y < 0 ? strength : -strength)
-                
-                // points[dragIdx].addForce(panOffset.toArray())
-            }
-
-            dragIdx = -1
-        })
     }
 }
 

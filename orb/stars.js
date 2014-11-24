@@ -4,6 +4,7 @@ var THREE = require('three')
 var randf = require('randf')
 var TweenMax = require('gsap')
 var config = require('./config')
+var mobile = require('./is-mobile')
 
 module.exports = function(viewer) {
     var box = new THREE.BoxGeometry(1, 1, 1)
@@ -12,9 +13,9 @@ module.exports = function(viewer) {
         transparent: true,
         fog: false
     })
-
+    var amount = mobile ? 250 : 500
     var delay = config.startDelay + 0.25
-    var stars = array(500).map(function(i) {
+    var stars = array(amount).map(function(i) {
         var scale = 100
         var pos = random([0, 0, 0], scale)
 

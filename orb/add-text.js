@@ -7,10 +7,12 @@ var fontImage = require('./texture-cache')('fonts/LatoBlack-sdf.png')
 var mat4 = require('gl-mat4')
 var mouse = require('./mouse')
 
+var mobile = require('./is-mobile')
+
 var phrases = [
     'merry xmas!',
-    'drag to rotate'
-] //require('./phrases')
+    (mobile?'swipe':'drag')+' to rotate'
+]
 
 module.exports = function(viewer, font) {
     var startDelay = 1.8
