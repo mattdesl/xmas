@@ -10,11 +10,10 @@ var mouse = require('./mouse')
 var mobile = require('./is-mobile')
 
 var phrases = [
-    'merry xmas!',
     (mobile?'swipe':'drag')+' to rotate',
-    'tap on Earth to find some hot cocoa'
+    'tap the Earth to warm up with some coffee'
 ]
-var textTimeout = 0.8
+var textTimeout = 1.5
 
 module.exports = function(viewer, font) {
     var startDelay = 1.8

@@ -58,20 +58,25 @@ require('domready')(function() {
             }
         })
 
+        var errorPhrases = [
+            'no coffee here!',
+            'nope... try again!'
+        ]
 
         var search = throttle(function(latlng) {
             console.log("Searching...", latlng)
             coffee(latlng).then(function(data) {
                 text.show(data.cafe+' in '+data.name)
             }).catch(function(err) {
-                text.show('no coffee here!')
+                text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
                 // console.log("Could not get coffee", err)
             })
         }, 3500)
 
         //don't let user click right away
         setTimeout(function() {
+            console.log("allow")
             earth.on('select', search)
-        }, 6000)
+        }, 3000)
     })
 })
