@@ -83,7 +83,7 @@
   },
   "scripts": {
     "test": "node test.js",
-    "bundle": "browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
+    "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
