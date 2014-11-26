@@ -2,6 +2,7 @@ var Promise = require('bluebird')
 var THREE = require('three')
 var create = require('./three-mesh-viewer')(THREE)
 
+var mobile = require('./is-mobile')
 var preload = require('./preload-textures')
 var createOrb = Promise.promisify(require('./create-orb'))
 var createGift = Promise.promisify(require('./create-gift'))
@@ -16,9 +17,10 @@ var config = require('./config')
 var throttle = require('lodash.throttle')
 var coffee = require('./get-coffee')
 
+// var $ = document.querySelector
+
 require('domready')(function() {
     document.body.style.background = '#151a17'
-
     var viewer = create()
 
     Promise.all([
@@ -27,8 +29,8 @@ require('domready')(function() {
         createGift(),
         loadJSON('fonts/LatoBlack-sdf.json')
     ]).spread( (images, mesh, gift, font) => {
-        var tmp = new THREE.Vector3()
-                
+        require('./about')()
+
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
         viewer.controls.target.set(0, 0, 0)
@@ -51,8 +53,9 @@ require('domready')(function() {
         require('./add-gifts')(viewer, gift)
         var text = require('./add-text')(viewer, font)
 
+        var margin = mobile ? 0 : 20
         TweenMax.to(viewer, 1.0, {
-            margin: 20, ease: 'easeOutQuart', delay: 1.0,
+            margin: margin, ease: 'easeOutQuart', delay: 1.0,
             onStart: function() {
                 document.body.style.background = '#fff'
             }
@@ -66,10 +69,10 @@ require('domready')(function() {
         var search = throttle(function(latlng) {
             console.log("Searching...", latlng)
             coffee(latlng).then(function(data) {
-                text.show(data.cafe+'\n'+data.name)
+                var str = String(data.cafe).trim()+'\n'+String(data.name.trim())
+                text.show(str.trim())
             }).catch(function(err) {
                 text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
-                // console.log("Could not get coffee", err)
             })
         }, 3500)
 

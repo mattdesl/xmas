@@ -1,0 +1,197 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+}
+
+.about {
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  max-width: 400px;
+  /*min-height: 200px;*/
+  max-height: 400px;
+  background-color: white;
+  border-radius: 4px;
+  margin: auto;
+  padding: 20px;
+}
+
+.close-button {
+  color: white;
+  margin: 0;
+  position: absolute;
+  top: 7px;
+  cursor: pointer;
+  padding: 3px;
+  color: black;
+  right: 7px;
+}
+
+.button {
+  cursor: pointer;
+  opacity: 0.8;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  -ms-transition: opacity 0.25s ease;
+  -o-transition: opacity 0.25s ease;
+  -transition: opacity 0.25s ease;
+}
+
+.button:hover {
+  opacity: 1.0;
+}
+
+.google {
+  margin-top: 15px;
+}
+
+h1 {
+  font-style: italic;
+  font-size: 32px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+h3 {
+  font-size: 12px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+h4 {
+  font-size: 20px;
+  margin-top: 0px;
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+a, a:visited, a:active, a:link {
+  color: #c62121;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.icon-twitter {
+  margin: 0;
+  color: #c62121;
+  margin-top: 40px;
+  font-size: 20px;
+  cursor: hover;
+}
+
+.about-container {  
+  display: table;
+  vertical-align: middle;
+  position: absolute;
+  width: 100%;
+  margin: auto;
+  height: 100%;
+  text-align: center;
+}
+
+.about-cell {
+  vertical-align: middle;
+  display: table-cell;
+}
+
+.about-button {
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  margin: 40px;
+  right: 0px;
+  color: white;
+  font-size: 24px;
+}
+
+@-webkit-keyframes rotating {
+    from{
+        -webkit-transform: rotate(0deg);
+    }
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+#spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  width: 32px; 
+  height: 32px; 
+
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  -webkit-animation: rotating 2s linear infinite;
+  -animation: rotating 2s linear infinite;
+}
+
+/*IconFont stuff from fontello*/
+
+@font-face {
+  font-family: 'fontello';
+  src: url('../fonts/fontello.eot?82432173');
+  src: url('../fonts/fontello.eot?82432173#iefix') format('embedded-opentype'),
+       url('../fonts/fontello.woff?82432173') format('woff'),
+       url('../fonts/fontello.ttf?82432173') format('truetype'),
+       url('../fonts/fontello.svg?82432173#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../fonts/fontello.svg?82432173#fontello') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+     
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-info-circled-alt:before { content: '\e800'; } /* '' */
+.icon-help-circled:before { content: '\e801'; } /* '' */
+.icon-cancel:before { content: '\e802'; } /* '' */
+.icon-link:before { content: '\e803'; } /* '' */
+.icon-twitter:before { content: '\e804'; } /* '' */

@@ -170,7 +170,7 @@ module.exports = function(viewer, font) {
             onStart: function(str, curText, curObj) {
                 curText.element.text = str
                 curText.element.align = 'center'
-                curText.element.layout(500)
+                curText.element.layout(600)
                 curObj.scale.y = 0
                 position(curText)
 
