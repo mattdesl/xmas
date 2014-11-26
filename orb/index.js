@@ -13,6 +13,9 @@ var loadJSON = Promise.promisify(require('load-json-xhr'))
 var cache = require('./texture-cache')
 var config = require('./config')
 
+var throttle = require('lodash.throttle')
+var coffee = require('./get-coffee')
+
 require('domready')(function() {
     document.body.style.background = '#151a17'
 
@@ -33,7 +36,7 @@ require('domready')(function() {
         viewer.controls.rotateSpeed = 0.4
         viewer.controls.minPolarAngle = 30 * Math.PI/180 
         viewer.controls.maxPolarAngle = 150 * Math.PI/180 
-        viewer.controls.minDistance = 5
+        viewer.controls.minDistance = 4
         viewer.controls.maxDistance = 9
         viewer.controls.noPan = true
         viewer.camera.position.set(0, 6, 6)
@@ -44,9 +47,9 @@ require('domready')(function() {
 
         require('./add-lights')(viewer.scene)
         require('./stars')(viewer)
-        createEarth(viewer, mesh)
+        var earth = createEarth(viewer, mesh)
         require('./add-gifts')(viewer, gift)
-        require('./add-text')(viewer, font)
+        var text = require('./add-text')(viewer, font)
 
         TweenMax.to(viewer, 1.0, {
             margin: 20, ease: 'easeOutQuart', delay: 1.0,
@@ -54,5 +57,21 @@ require('domready')(function() {
                 document.body.style.background = '#fff'
             }
         })
+
+
+        var search = throttle(function(latlng) {
+            console.log("Searching...", latlng)
+            coffee(latlng).then(function(data) {
+                text.show(data.cafe+' in '+data.name)
+            }).catch(function(err) {
+                text.show('no coffee here!')
+                // console.log("Could not get coffee", err)
+            })
+        }, 3500)
+
+        //don't let user click right away
+        setTimeout(function() {
+            earth.on('select', search)
+        }, 6000)
     })
 })

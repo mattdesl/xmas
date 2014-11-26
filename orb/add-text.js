@@ -11,8 +11,10 @@ var mobile = require('./is-mobile')
 
 var phrases = [
     'merry xmas!',
-    (mobile?'swipe':'drag')+' to rotate'
+    (mobile?'swipe':'drag')+' to rotate',
+    'tap on Earth to find some hot cocoa'
 ]
+var textTimeout = 0.8
 
 module.exports = function(viewer, font) {
     var startDelay = 1.8
@@ -25,18 +27,53 @@ module.exports = function(viewer, font) {
     fontTex.flipY = false
     fontTex.anistrophy = viewer.renderer.getMaxAnisotropy()
 
-    var elements = []
+    var tween = null
+    var lastTheta = null
+    var isShowing = true
 
+    var elements = []
     elements.push(createText(phrases[0]))
 
     viewer.on('text', function(dt) {
+        if (lastTheta === null || lastTheta !== viewer.controls.theta)
+            thetaChanged()
 
         elements.forEach(function(e) {
             e.text.draw(viewer.camera, e.object3d)
         })
         viewer.renderer.resetGLState()
+
+        lastTheta = viewer.controls.theta
     })
 
+    return {
+
+        showing: function() {
+            return isShowing
+        },
+
+        show: function(text) {
+            killAll()
+            cancel = false
+
+            var e = elements[0]
+            e.text.opacity = 0
+            e.object3d.scale.y = 0
+
+            singleLoop(text, e.text, e.object3d)
+        }
+    }
+
+    function thetaChanged() {
+        elements.forEach(function(e) {
+            TweenMax.killTweensOf(e.parent.rotation)
+            TweenMax.to(e.parent.rotation, 0.5, {
+                y: viewer.controls.theta,
+                delay: 0.01,
+                ease: 'easeOutQuart'
+            })
+        })
+    }
 
     function createText(str) {
         var text = TextElement(viewer.renderer, {
@@ -51,29 +88,18 @@ module.exports = function(viewer, font) {
         
         text.opacity = 0
         textObj.position.set(0, 0, 0)
-        textObj.rotation.y = Math.PI/2
-
-
-        TweenMax.to(textObj.rotation, 1.0, {
-            y: 0 * Math.PI/180,
-            ease: 'easeInOutExpo',
-            delay: startDelay
-        })
-        TweenMax.to(text, 1.0, {
-            opacity: 1,
-            delay: startDelay
-        })
-
+        textObj.scale.y = 0
         position(text)
 
         var parent = new THREE.Object3D()
-        parent.rotation.y = Math.PI/2
-        parent.scale.set(0.5,1,1)
+        // parent.rotation.y = Math.PI/2
+        parent.position.set(0,-1.8,0)
         parent.add(textObj)
-
         viewer.scene.add(parent)
 
-        loop(text, textObj, startDelay)
+        animIn(startDelay, phrases[0], text, textObj, function() {
+            loop(text, textObj, textTimeout)
+        })
 
         return {
             text: text,
@@ -87,7 +113,8 @@ module.exports = function(viewer, font) {
         mat4.identity(text.transform)
         mat4.scale(text.transform, text.transform, [SCALE,SCALE,SCALE])
 
-        var translation = [-text.element.getBounds().width/2, -295, 0]
+        var bounds = text.element.getBounds()
+        var translation = [-bounds.width/2, -bounds.height, 0]
         mat4.translate(text.transform, text.transform, translation)
 
         var s = 1
@@ -95,24 +122,52 @@ module.exports = function(viewer, font) {
         mat4.scale(text.transform, text.transform, size)
     }
 
+    function singleLoop(str, text, textObj) {
+        animIn(0, str, text, textObj, function() {
+            animOut(text, textObj, textTimeout)
+        }.bind(this))
+    }
+
+    function animOut(text, textObj, delay) {
+        TweenMax.to(textObj.scale, 1, {
+            y: 0,
+            delay: delay,
+            ease: 'easeOutExpo'
+        })
+        TweenMax.to(text, 0.5, {
+            opacity: 0,
+            delay: delay,
+            ease: 'easeOutQuad'
+        })
+    }
+
+    function animIn(delay, str, text, textObj, onComplete) {
+        TweenMax.killTweensOf([text, textObj])
+
+        TweenMax.to(text, 1, {
+            opacity: 1,
+            delay: delay,
+            onStart: function(str, curText, curObj) {
+                curText.element.text = str
+                curObj.scale.y = 0
+                position(curText)
+
+                TweenMax.to(curObj.scale, 1, {
+                    y: 1,
+                    ease: 'easeOutExpo'
+                })
+            }.bind(null, str, text, textObj),
+            onComplete: onComplete
+        })
+    }
 
     function loop(text, textObj, delay) {
         if (cancel)
             return
-
         delay = delay||0
-        
-        TweenMax.delayedCall(delay + 3.0, function() {
-            TweenMax.killTweensOf([text, textObj])
 
-            TweenMax.to(textObj.rotation, 0.5, {
-                y: -Math.PI/2,
-                ease: 'easeInOutExpo'
-            })
-            TweenMax.to(text, 0.5, {
-                opacity: 0,
-                ease: 'easeOutQuad'
-            })
+        tween = TweenMax.delayedCall(delay, function() {
+            animOut(text, textObj)
 
             var str = nextPhrase()
 
@@ -121,31 +176,28 @@ module.exports = function(viewer, font) {
                 return
             }
 
-            TweenMax.to(text, 1, {
-                opacity: 1,
-                // ease: 'easeIn',
-                delay: 0.5,
-                onStart: function(str, curText, curObj) {
-                    curText.element.text = str
-                    curObj.rotation.y = Math.PI/2
-                    position(curText)
-
-                    TweenMax.to(curObj.rotation, 1, {
-                        y: 0,
-                        ease: 'easeInOutExpo'
-                    })
-                }.bind(null, str, text, textObj),
-                onComplete: loop.bind(null, text, textObj)
-            })
+            animIn(1.0, str, text, textObj, loop.bind(null, text, textObj, textTimeout))
         })
+    }
 
-
+    function killAll() {
+        if (tween) {
+            tween.kill()
+            tween = null
+        }
+        elements.forEach(function(e) {
+            TweenMax.killTweensOf([
+                e.parent.rotation,
+                e.text,
+                e.object3d.scale
+            ])
+        })
     }
  
     function nextPhrase() {
         phraseIndex++
         if (phraseIndex > phrases.length-1)
             return ''
-        return phrases[phraseIndex].toLowerCase()
+        return phrases[phraseIndex]//.toLowerCase()
     }
 }
