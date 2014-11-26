@@ -102,16 +102,17 @@ module.exports = function(viewer, mesh) {
         var boundingSphere = sphere.boundingSphere
         tmpSphere.copy(boundingSphere)
         tmpSphere.applyMatrix4(earth.matrixWorld)
-        if (!isMobile && mouse.raycaster.ray.isIntersectionSphere(tmpSphere)) {
+        if (mouse.raycaster.ray.isIntersectionSphere(tmpSphere)) {
             lerpSpeed = 0.1
             mouse.raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
-        } else {
+        }
+         // else {
             // mouse.vector.set(0, 0, 0.5)
             // mouse.vector.unproject(viewer.camera)
             // mouse.vector.sub(viewer.camera.position).normalize()
             // mouse.raycaster.set(viewer.camera.position, mouse.vector)
             // mouse.raycaster.ray.intersectSphere(tmpSphere, mouseCastPos)
-        }
+        // }
         
         mouseOrigin.lerp(mouseCastPos, lerpSpeed)
         mat.uniforms.origin.value = mouseOrigin
