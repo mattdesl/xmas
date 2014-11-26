@@ -63,11 +63,30 @@ module.exports = function(viewer, font) {
         }
     }
 
+    function shortestArc(a, b) {
+        if (Math.abs(b-a) < Math.PI)
+            return b-a
+        if (b>a)
+            return b-a-Math.PI*2
+        return b-a+Math.PI*2
+    }
+
     function thetaChanged() {
         elements.forEach(function(e) {
+
+
+            // var x = e.parent.rotation.y, 
+            //     y = viewer.controls.theta
+            // var abdist = Math.abs(x - y)
+            // var dist = Math.min((2 * Math.PI) - abdist, abdist)
+
+            var target = viewer.controls.theta
+            target = target-2*Math.PI*Math.floor(target/(2*Math.PI)+0.5)
+            //Math.atan2(Math.sin(target),Math.cos(target))
+
             TweenMax.killTweensOf(e.parent.rotation)
             TweenMax.to(e.parent.rotation, 0.5, {
-                y: viewer.controls.theta,
+                y: target,
                 delay: 0.01,
                 ease: 'easeOutQuart'
             })

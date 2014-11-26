@@ -76,7 +76,9 @@
     "verlet-system": "^1.0.15",
     "xtend": "^4.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "beefy": "git://github.com/mattdesl/beefy#fix-html"
+  },
   "scripts": {
     "test": "node test.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
