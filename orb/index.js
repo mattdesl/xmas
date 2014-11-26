@@ -23,20 +23,14 @@ require('domready')(function() {
     document.body.style.background = '#151a17'
     var viewer = create()
 
-
     Promise.all([
         preload(cache.paths),
         createOrb({ envMap: viewer.cubeCamera.renderTarget }),
         createGift(),
         loadJSON('fonts/LatoBlack-sdf.json')
     ]).spread( (images, mesh, gift, font) => {
-        TweenMax.to(document.querySelector('#spinner'), 0.5, {
-            autoAlpha: 0,
-            delay: 0.35
-        })
+        require('./about')()
 
-        var tmp = new THREE.Vector3()
-                
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
         viewer.controls.target.set(0, 0, 0)
