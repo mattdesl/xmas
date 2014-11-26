@@ -94,6 +94,8 @@ module.exports = function(viewer, font) {
     }
 
     function createText(str) {
+        var wrap = mobile ? window.innerWidth : undefined
+
         var text = TextElement(viewer.renderer, {
             text: str,
             font: font,
@@ -167,6 +169,8 @@ module.exports = function(viewer, font) {
             delay: delay,
             onStart: function(str, curText, curObj) {
                 curText.element.text = str
+                curText.element.align = 'center'
+                curText.element.layout(400)
                 curObj.scale.y = 0
                 position(curText)
 

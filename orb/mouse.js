@@ -23,4 +23,10 @@ addEvent(window, 'click', function(ev) {
     mouse.emit('click', pos.x, pos.y)
 })
 
+addEvent(window, 'touchstart', function(ev) {
+    var touch = ev.targetTouches[0]
+    var pos = offset(ev, touch)
+    mouse.emit('click', pos.x, pos.y)
+})
+
 module.exports = mouse

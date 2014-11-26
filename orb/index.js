@@ -66,7 +66,7 @@ require('domready')(function() {
         var search = throttle(function(latlng) {
             console.log("Searching...", latlng)
             coffee(latlng).then(function(data) {
-                text.show(data.cafe+' in '+data.name)
+                text.show(data.cafe+'\n'+data.name)
             }).catch(function(err) {
                 text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
                 // console.log("Could not get coffee", err)
@@ -77,6 +77,6 @@ require('domready')(function() {
         setTimeout(function() {
             console.log("allow")
             earth.on('select', search)
-        }, 3000)
+        }, 6000)
     })
 })
