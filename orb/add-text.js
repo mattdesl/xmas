@@ -11,7 +11,7 @@ var mobile = require('./is-mobile')
 
 var phrases = [
     (mobile?'swipe':'drag')+' to rotate',
-    'tap the Earth to warm up with some coffee'
+    'tap the Earth\nto warm up with some coffee'
 ]
 var textTimeout = 1.5
 
@@ -87,7 +87,7 @@ module.exports = function(viewer, font) {
             TweenMax.killTweensOf(e.parent.rotation)
             TweenMax.to(e.parent.rotation, 0.5, {
                 y: target,
-                delay: 0.01,
+                delay: 0.001,
                 ease: 'easeOutQuart'
             })
         })
@@ -170,7 +170,7 @@ module.exports = function(viewer, font) {
             onStart: function(str, curText, curObj) {
                 curText.element.text = str
                 curText.element.align = 'center'
-                curText.element.layout(400)
+                curText.element.layout(500)
                 curObj.scale.y = 0
                 position(curText)
 
