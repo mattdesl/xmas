@@ -69,7 +69,6 @@ require('domready')(function() {
                 text.show(data.cafe+'\n'+data.name)
             }).catch(function(err) {
                 text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
-                // console.log("Could not get coffee", err)
             })
         }, 3500)
 
