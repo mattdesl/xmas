@@ -64,6 +64,12 @@ h1 {
   font-style: italic;
   font-size: 32px;
   margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 13px;
+  margin: 0;
   margin-bottom: 20px;
 }
 

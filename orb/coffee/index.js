@@ -13,7 +13,7 @@ module.exports = function(text) {
         'lots of fish, not so much hot cocoa'
     ]
     var nothingFound = [
-        'not much in {0}',
+        'not much found in {0}',
         'not much around {0}',
         'nothing found near {0}',
         'hot cocoa must not be so popular in {0}',
@@ -28,7 +28,7 @@ module.exports = function(text) {
             if (data.cafe) {
                 str = String(data.cafe).trim()+'\n'+String(data.name).trim()
             } else {
-                var country = String(data.country).trim()
+                var country = String(data.name).trim() //hmm use country or place?
                 var randList = nothingFound.slice()
                 if (places.hot(country))
                     randList = randList.concat(hotPlaces)
