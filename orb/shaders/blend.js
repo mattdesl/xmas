@@ -85,7 +85,7 @@ module.exports = function (opt) {
                 THREE.ShaderChunk[ "map_fragment" ],
 
                 "float dist = distance(origin, vWorldPos1.xyz) / (1.0);",
-                "dist = smoothstep(0.20, 0.41, dist);",
+                "dist = smoothstep(0.20, 0.81, dist);",
 
                 "vec4 procColor = texture2D(tProcessed, vUv);",
                 "vec3 blended = max(gl_FragColor.rgb, procColor.rgb);",

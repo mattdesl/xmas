@@ -3,8 +3,8 @@ var array = require('array-range')
 var THREE = require('three')
 var randf = require('randf')
 var TweenMax = require('gsap')
-var config = require('./config')
-var mobile = require('./is-mobile')
+var config = require('../config')
+var mobile = require('../is-mobile')
 
 module.exports = function(viewer) {
     var box = new THREE.BoxGeometry(1, 1, 1)

@@ -28,6 +28,7 @@
     "eases": "^1.0.2",
     "events": "^1.0.2",
     "extract-svg-path": "^1.0.0",
+    "format-text": "0.0.3",
     "frontend-npm-goodies": "git://github.com/mattdesl/frontend-npm-goodies",
     "getboundingbox": "^1.0.0",
     "gl-basic-shader": "^1.2.2",
@@ -83,6 +84,7 @@
   },
   "scripts": {
     "test": "node test.js",
+    "disc": "browserify orb/index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
     "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },

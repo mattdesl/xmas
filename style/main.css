@@ -4,6 +4,21 @@ body {
   font-weight: 400;
 }
 
+.g3d {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+
+  -webkit-perspective: 1500px;
+  -moz-perspective: 1500px;
+  -ms-perspective: 1500px;
+  -o-perspective: 1500px;
+  perspective: 1500px;
+  
+}
+
 .about {
   position: relative;
   -webkit-font-smoothing: antialiased;
@@ -34,7 +49,7 @@ body {
   -moz-transition: opacity 0.25s ease;
   -ms-transition: opacity 0.25s ease;
   -o-transition: opacity 0.25s ease;
-  -transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
 }
 
 .button:hover {
@@ -78,6 +93,7 @@ a, a:visited, a:active, a:link {
 }
 
 .icon-twitter {
+  display: block;
   margin: 0;
   color: #c62121;
   margin-top: 40px;
@@ -133,7 +149,7 @@ a, a:visited, a:active, a:link {
   -ms-animation: rotating 2s linear infinite;
   -o-animation: rotating 2s linear infinite;
   -webkit-animation: rotating 2s linear infinite;
-  -animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
 }
 
 /*IconFont stuff from fontello*/

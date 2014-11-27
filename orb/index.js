@@ -1,21 +1,19 @@
 var Promise = require('bluebird')
 var THREE = require('three')
-var create = require('./three-mesh-viewer')(THREE)
+var create = require('./3d/three-mesh-viewer')(THREE)
 
 var mobile = require('./is-mobile')
 var preload = require('./preload-textures')
-var createOrb = Promise.promisify(require('./create-orb'))
-var createGift = Promise.promisify(require('./create-gift'))
-var createEarth = require('./earth')
+var createOrb = Promise.promisify(require('./3d/create-orb'))
+var createGift = Promise.promisify(require('./3d/create-gift'))
+var createEarth = require('./3d/earth')
 var TweenMax = require('gsap')
 
 var loadJSON = Promise.promisify(require('load-json-xhr'))
 
 var cache = require('./texture-cache')
 var config = require('./config')
-
-var throttle = require('lodash.throttle')
-var coffee = require('./get-coffee')
+var coffee = require('./coffee')
 
 // var $ = document.querySelector
 
@@ -47,11 +45,11 @@ require('domready')(function() {
             y: 3, ease: 'easeOutQuart', delay: config.startDelay
         })
 
-        require('./add-lights')(viewer.scene)
-        require('./stars')(viewer)
+        require('./3d/add-lights')(viewer.scene)
+        require('./3d/stars')(viewer)
         var earth = createEarth(viewer, mesh)
-        require('./add-gifts')(viewer, gift)
-        var text = require('./add-text')(viewer, font)
+        require('./3d/add-gifts')(viewer, gift)
+        var text = require('./3d/add-text')(viewer, font)
 
         var margin = mobile ? 0 : 20
         TweenMax.to(viewer, 1.0, {
@@ -61,20 +59,7 @@ require('domready')(function() {
             }
         })
 
-        var errorPhrases = [
-            'no coffee here!',
-            'nope... try again!'
-        ]
-
-        var search = throttle(function(latlng) {
-            console.log("Searching...", latlng)
-            coffee(latlng).then(function(data) {
-                var str = String(data.cafe).trim()+'\n'+String(data.name.trim())
-                text.show(str.trim())
-            }).catch(function(err) {
-                text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
-            })
-        }, 3500)
+        var search = coffee(text)
 
         //don't let user click right away
         setTimeout(function() {

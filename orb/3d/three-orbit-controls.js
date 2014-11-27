@@ -570,7 +570,7 @@ module.exports = function(THREE) {
             if ( scope.enabled === false ) return;
 
             event.preventDefault();
-            event.stopPropagation();
+            // event.stopPropagation();
 
             var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
