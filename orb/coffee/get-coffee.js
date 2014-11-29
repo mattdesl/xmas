@@ -1,9 +1,22 @@
 /*globals google*/
 
 var Promise = require('bluebird')
-var nearestCoffee = Promise.promisify(require('nearest-coffee'))
+var nearestCoffee = require('nearest-coffee')
 var geocode = require('./geocode')
 var xtend = require('xtend')
+
+//we don't want it to error out if we can't find coffee
+function nearestCoffeeAsync(opt) {
+    return new Promise(function(resolve, reject) {
+        nearestCoffee(opt, function(err, data) {
+            if (err)
+                resolve([])
+            else 
+                resolve(data)
+        })
+    })
+}
+
 
 module.exports = function(latlng) {
     return geocode(latlng)
@@ -14,6 +27,7 @@ module.exports = function(latlng) {
             var index = Math.max(0, data.length-3)
             return { 
                 name: data[index].formatted_address,
+                country: data[data.length-1].formatted_address,
                 originalLocation: latlng,
                 location: [
                     data[index].geometry.location.lat(),
@@ -22,35 +36,16 @@ module.exports = function(latlng) {
             }
         })
         .then(function(data) {
-            var coffee = nearestCoffee({ 
+            var coffee = nearestCoffeeAsync({ 
                 location: data.location, 
                 radius: 50000
             })
             return Promise.all([ Promise.resolve(data), coffee ])
         })
         .spread(function(place, results) {
-            if (results.length === 0)
-                return Promise.reject("no coffee found")
-
-            console.log(results[0].name,'in',place.name)
-            return xtend(place, { cafe: results[0].name })
+            var result = xtend(place, { 
+                cafe: results.length === 0 ? null : results[0].name 
+            })
+            return result
         })
-            
-            // return nearestCoffee({
-            //     location: data.location,
-            //     radius: 50000
-            // }, function(err, coffee) {
-            //     if (err) throw err
-            //     console.log(coffee)
-            // })
-        // })
-
-    // pos = [44.2382181,-100.1236762]
-    //[40.758895,-73.985131]
-    // coffee({ location: pos, radius: 50000 }), function(err, data) {
-    //     if (err)throw err
-    //     console.log(data.map(function(d) {
-    //         return d.vicinity
-    //     }))
-    // })
 }

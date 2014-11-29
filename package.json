@@ -29,6 +29,7 @@
     "eases": "^1.0.2",
     "events": "^1.0.2",
     "extract-svg-path": "^1.0.0",
+    "format-text": "0.0.3",
     "frontend-npm-goodies": "git://github.com/mattdesl/frontend-npm-goodies",
     "getboundingbox": "^1.0.0",
     "gl-basic-shader": "^1.2.2",
@@ -67,6 +68,7 @@
     "three": "git://github.com/mattdesl/three.js#reset-state-2",
     "three-effectcomposer": "0.0.1",
     "three-glslify": "^2.0.1",
+    "three-line-2d": "^1.0.2",
     "three-sdf-text": "git://github.com/mattdesl/three-sdf-text#drop-shadow",
     "touch-position": "^1.0.3",
     "triangulate-contours": "^1.0.1",
@@ -84,7 +86,8 @@
   },
   "scripts": {
     "test": "node test.js",
-    "bundle": "browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
+    "disc": "browserify orb/index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
+    "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],

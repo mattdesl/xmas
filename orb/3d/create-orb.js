@@ -1,6 +1,6 @@
 var THREE = require('three')
-var matcap = require('./shaders/matcap')
-var cache = require('./texture-cache')
+var matcap = require('../shaders/matcap')
+var cache = require('../texture-cache')
 
 var normUrl = cache('img/nrm3.png')
 var matCapUrl = cache('img/mcap3.png')

@@ -25,15 +25,57 @@ module.exports = function() {
     })
 
     var open = false
+    var lastTween = null
 
     addEvent(openAbout, 'click', function(ev) {
         open = !open
-        about.style.display = open ? 'block' : 'none'
+        if (open) aniIn()
+        else aniOut()
+
+        // about.style.display = open ? 'block' : 'none'
     })
 
     addEvent(closeAbout, 'click', function(ev) {
         open = false
-        about.style.display = 'none'
+        aniOut()
     })
 
+    function aniIn() {
+        if (lastTween) 
+            lastTween.kill()    
+        TweenMax.set(about, {
+            display: 'block',
+            rotationX: '90deg',
+            z: '-400px',
+            transformOrigin: 'center'
+        })
+        lastTween = TweenMax.to(about, 1.0, {
+            ease: 'easeOutExpo',
+            y: '0px',
+            rotationX: '0deg',
+            z: '0px'
+        })
+
+        TweenMax.set(about.children, { opacity: 0 })
+        var stagger = 0.03, delay = 0.2
+        TweenMax.staggerTo(about.children, 1, {
+            delay: delay,
+            opacity: 1,
+            // ease: 'easeOutQuad'
+        }, stagger)
+    }
+
+    function aniOut() {
+        if (lastTween) 
+            lastTween.kill()    
+        lastTween = TweenMax.to(about, 0.5, {
+            ease: 'easeOutExpo',
+            z: '-400px',
+            rotationX: '90deg',
+            onComplete: function() {
+                about.style.display = 'none'
+            }
+        })
+
+    }
 }

@@ -3,15 +3,15 @@ var TextElement = require('three-sdf-text')(THREE)
 var TweenMax = require('gsap')
 
 
-var fontImage = require('./texture-cache')('fonts/LatoBlack-sdf.png')
+var fontImage = require('../texture-cache')('fonts/LatoBlack-sdf.png')
 var mat4 = require('gl-mat4')
-var mouse = require('./mouse')
+var mouse = require('../mouse')
 
-var mobile = require('./is-mobile')
+var mobile = require('../is-mobile')
 
 var phrases = [
     (mobile?'swipe':'drag')+' to rotate',
-    'tap the Earth\nto warm up with some coffee'
+    'tap the Earth\nto find some hot cocoa'
 ]
 var textTimeout = 1.5
 

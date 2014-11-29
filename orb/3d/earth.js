@@ -7,15 +7,15 @@ var lerp = require('lerp')
 
 var TweenMax = require('gsap')
 
-var blendShader = require('./shaders/blend')
+var blendShader = require('../shaders/blend')
 var tmpSphere = new THREE.Sphere()
 
-var earthURL = require('./texture-cache')('img/earth1-small.jpg')
-var config = require('./config')
-var isMobile = require('./is-mobile')
+var earthURL = require('../texture-cache')('img/earth1-small.jpg')
+var config = require('../config')
+var isMobile = require('../is-mobile')
 
 var getLatLng = require('./point-to-latlng')
-var mouse = require('./mouse')
+var mouse = require('../mouse')
 
 module.exports = function(viewer, mesh) {
     var t = 0

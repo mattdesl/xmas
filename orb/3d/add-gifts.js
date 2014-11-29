@@ -3,7 +3,7 @@ var array = require('array-range')
 var random = require('gl-vec3/random')
 var randf = require('randf')
 var TweenMax = require('gsap')
-var config = require('./config')
+var config = require('../config')
 var clamp = require('clamp')
 
 var colors = require('./colors')
@@ -12,8 +12,8 @@ var mouseOffset = require('mouse-event-offset')
 
 var World = require('verlet-system/3d')
 var Point = require('verlet-point/3d')
-var mouse = require('./mouse')
-var mobile = require('./is-mobile')
+var mouse = require('../mouse')
+var mobile = require('../is-mobile')
 
 var tmpSphere = new THREE.Sphere()
 var MIN_SCALE = 0.0001
@@ -23,16 +23,18 @@ module.exports = function(viewer, gift) {
     var delay = startDelay
 
 
-    var geoSphere = new THREE.IcosahedronGeometry(3, 2)
-    var geoMesh = new THREE.Mesh(geoSphere, new THREE.MeshBasicMaterial({ 
-        color: 0xd1d1d1, 
-        opacity: 0.3,
-        transparent: true,
-        wireframe: true 
-    }))
+    // var geoSphere = new THREE.IcosahedronGeometry(3, 2)
+    // var geoMesh = new THREE.Mesh(geoSphere, new THREE.MeshBasicMaterial({ 
+    //     color: 0xd1d1d1, 
+    //     opacity: 0.3,
+    //     transparent: true,
+    //     wireframe: true 
+    // }))
 
-    geoSphere.computeBoundingSphere()
-    // gift.geometry.computeBoundingSphere()
+    var clickSphere = new THREE.Sphere()
+    clickSphere.radius = 3
+
+    // geoSphere.computeBoundingSphere()
 
     var amount = mobile ? 50 : 100
     var gifts = array(amount).map(function(i) {
@@ -51,11 +53,11 @@ module.exports = function(viewer, gift) {
         var giftObj = new THREE.Object3D()
         giftObj.add(mesh)
         
-        var hover = geoMesh.clone()
+        // var hover = geoMesh.clone()
         var meshObj = new THREE.Object3D()
         meshObj.scale.multiplyScalar(MIN_SCALE)
         meshObj.add(giftObj)
-        meshObj.add(hover)
+        // meshObj.add(hover)
 
         var s = randf(0.08, 0.35)
         TweenMax.to(meshObj.scale, 1.0, {
@@ -63,7 +65,7 @@ module.exports = function(viewer, gift) {
             delay: delay+=0.02
         })
 
-        hover.visible = false
+        // hover.visible = false
         mesh.position.y = -0.4 //fix model to origin
 
         var pos = random([0, 0, 0], 10)
@@ -72,7 +74,7 @@ module.exports = function(viewer, gift) {
         meshObj.rotation.y = randf(-Math.PI*2, Math.PI*2) 
         meshObj.rotation.z = randf(-Math.PI*2, Math.PI*2)
         
-        meshObj.hover = hover
+        // meshObj.hover = hover
         return meshObj
     })
 
@@ -117,8 +119,8 @@ module.exports = function(viewer, gift) {
         })
 
         mouse.update(viewer)
-        newHover = closest(gifts, geoSphere.boundingSphere)
 
+        newHover = closest(gifts, clickSphere)
         // if (!viewer.controls.isRotating())
         //     viewer.controls.noRotate = newHover !== -1
         // else 
@@ -174,8 +176,8 @@ module.exports = function(viewer, gift) {
 
                 tmpPos2.set(lastPosition.x/width * 2 - 1, -lastPosition.y/height * 2 + 1, 0.5)
                 tmpPos2.unproject(viewer.camera)
-
                 tmpPos2.sub(tmpPos).negate().normalize()
+                
 
                 points[newHover].rotational.x -= tmpPos2.x*0.005
                 points[newHover].rotational.y -= tmpPos2.y*0.005
