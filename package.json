@@ -82,6 +82,9 @@
   "devDependencies": {
     "beefy": "git://github.com/mattdesl/beefy#fix-html",
     "browserify": "^6.3.3",
+    "datauri": "^0.5.5",
+    "html-minifier": "^0.6.9",
+    "minstache": "^1.2.0",
     "uglify-js": "^2.4.15"
   },
   "scripts": {
