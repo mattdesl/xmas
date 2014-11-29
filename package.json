@@ -82,6 +82,7 @@
   "devDependencies": {
     "beefy": "git://github.com/mattdesl/beefy#fix-html",
     "browserify": "^6.3.3",
+    "clean-css": "^2.2.19",
     "datauri": "^0.5.5",
     "html-minifier": "^0.6.9",
     "minstache": "^1.2.0",
@@ -90,7 +91,9 @@
   "scripts": {
     "test": "node test.js",
     "disc": "browserify orb/index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
-    "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
+    "style": "cleancss style/main.css -o style/main.min.css",
+    "build": "npm run style && npm run bundle",
+    "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -cm > build/bundle.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
