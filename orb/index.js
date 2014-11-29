@@ -23,7 +23,7 @@ require('domready')(function() {
 
     Promise.all([
         preload(cache.paths),
-        createOrb({ envMap: viewer.cubeCamera.renderTarget }),
+        createOrb(),
         createGift(),
         loadJSON('fonts/IstokBold.json')
     ]).spread( (images, mesh, gift, font) => {
@@ -58,10 +58,11 @@ require('domready')(function() {
         var earth = createEarth(viewer, mesh)
         require('./3d/add-gifts')(viewer, gift)
         var text = require('./3d/add-text')(viewer, font)
-        var indicator = require('./3d/click-indicator')(viewer)
+        var indicator = require('./3d/click-indicator')(viewer, earth.objec)
+
+        viewer.scene.add(indicator.mesh)
 
         var search = coffee(text)
-
         var tmpSphere = new THREE.Sphere()
 
         //don't let user click right away
@@ -77,7 +78,7 @@ require('domready')(function() {
                 
                 search(latlng)
             })
-        }, 2000)
+        }, 3500)
 
 
     })

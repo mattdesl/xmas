@@ -17,14 +17,13 @@ module.exports = function(text) {
         'lots of fish, not so much hot cocoa'
     ]
     var nothingFound = [
-        'not much found in {0}',
-        'not much around {0}',
-        'nothing found near {0}',
-        'hot cocoa must not be so popular in {0}',
+        'no hot cocoa here\n{0}',
+        'not much around here\n{0}',
+        'nothing found near\n{0}',
     ]
     var hotPlaces = [
-        'seems a bit hot there already',
-        "it's kind of warm there already.."
+        'seems a bit hot there already\n{0}',
+        "it's kind of warm there already...\n{0}"
     ]
     return throttle(function(latlng) {
         return coffee(latlng).then(function(data) {
@@ -32,14 +31,17 @@ module.exports = function(text) {
             if (data.cafe) {
                 str = strip(data.cafe)+'\n'+strip(data.name)
             } else {
-                var country = strip(data.name) //hmm use country or place?
+                var country = strip(data.country) //hmm use country or place?
                 var randList = nothingFound.slice()
-                if (places.hot(country))
+                if (places.hot(country)) {
                     randList = randList.concat(hotPlaces)
+                }
+                var loc = strip(data.name)
                 var randFound = randList[~~(Math.random()*randList.length)]
-                str = format(randFound, country)
+                str = format(randFound, loc)
             }
-            text.show(str)
+            var texts = str.split('\n')
+            text.show(texts)
         }).catch(function(err) {
             text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
         })

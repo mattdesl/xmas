@@ -7,10 +7,12 @@ var Emitter = require('events/')
 
 module.exports = function(THREE) {
     var OrbitController = MakeOrbitController(THREE)
-    return setup.bind(null, THREE, OrbitController)
+    return function(opt) {
+        return setup(THREE, OrbitController, opt)
+    }
 }
 
-function setup(THREE, OrbitController, mesh, opt) {
+function setup(THREE, OrbitController, opt) {
     var viewer = new Emitter()
 
     viewer.margin = 0
@@ -89,15 +91,13 @@ function setup(THREE, OrbitController, mesh, opt) {
         viewer.camera.lookAt(new THREE.Vector3())
 
         viewer.scene = new THREE.Scene()
-        if (mesh) 
-            viewer.scene.add(mesh)
-
+        
         viewer.controls = new OrbitController(viewer.camera)
         viewer.cubeIgnores = []
-        viewer.cubeCamera = new THREE.CubeCamera( opt.near, opt.far, 256 )
-        viewer.cubeCamera.renderTarget.minFilter = THREE.LinearFilter
-        viewer.cubeCamera.renderTarget.generateMipmaps = false
-        viewer.scene.add(viewer.cubeCamera);
+        // viewer.cubeCamera = new THREE.CubeCamera( opt.near, opt.far, 256 )
+        // viewer.cubeCamera.renderTarget.minFilter = THREE.LinearFilter
+        // viewer.cubeCamera.renderTarget.generateMipmaps = false
+        // viewer.scene.add(viewer.cubeCamera);
 
         background = createBackground(viewer.renderer.getContext(), {
             aspect: 1,

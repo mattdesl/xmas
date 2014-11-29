@@ -5,11 +5,11 @@ var cache = require('../texture-cache')
 var normUrl = cache('img/nrm3.png')
 var matCapUrl = cache('img/mcap3.png')
 
-module.exports = function(opt, cb) {
-    opt = opt || {}
-    cb = cb || ()=>{}
+module.exports = function(cb) {
+    cb = typeof cb === 'function' ? cb : function() {}
 
-    var reflectionCube = opt.envMap
+    var reflectionCube
+    // opt.envMap
     //require('./get-cube')()
 
     var loader = new THREE.JSONLoader(false)

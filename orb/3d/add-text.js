@@ -2,18 +2,15 @@ var THREE = require('three')
 var TextElement = require('three-sdf-text')(THREE)
 var TweenMax = require('gsap')
 
-
+var number = require('as-number')
 var fontImage = require('../texture-cache')('fonts/IstokBold.png')
 var mat4 = require('gl-mat4')
 var mouse = require('../mouse')
 
 var mobile = require('../is-mobile')
 
-var phrases = [
-    (mobile?'swipe':'drag')+' to rotate',
-    'tap the Earth\nto find some hot cocoa'
-]
-var textTimeout = 1.5
+var intro = ['tap the Earth\nto find some hot cocoa', 'click to drag']
+var textTimeout = 2
 
 module.exports = function(viewer, font) {
     var startDelay = 1.8
@@ -28,10 +25,8 @@ module.exports = function(viewer, font) {
 
     var tween = null
     var lastTheta = null
-    var isShowing = true
 
-    var elements = []
-    elements.push(createText(phrases[0]))
+    var elements = [ createText(), createText('', 0.6) ]
 
     viewer.on('text', function(dt) {
         if (lastTheta === null || lastTheta !== viewer.controls.theta)
@@ -45,162 +40,116 @@ module.exports = function(viewer, font) {
         lastTheta = viewer.controls.theta
     })
 
+    var show = function(texts, delay) {
+        killAll()
+        hide(elements)
+
+        if (typeof texts === 'string')
+            texts = [texts]
+
+        elements.forEach((e,i) => {
+            e.text.element.text = texts[i] || ''
+        })
+        layout(elements)
+
+        aniIn(elements, delay)
+        // singleLoop(text, e.text, e.object3d)
+    }
+
+    show(intro, startDelay)
+
     return {
 
-        showing: function() {
-            return isShowing
-        },
+        show: show
+    }
 
-        show: function(text) {
-            killAll()
-            cancel = false
-
-            var e = elements[0]
+    function hide(elements) {
+        elements.forEach(function(e) {
             e.text.opacity = 0
             e.object3d.scale.y = 0
-
-            singleLoop(text, e.text, e.object3d)
-        }
-    }
-
-    function shortestArc(a, b) {
-        if (Math.abs(b-a) < Math.PI)
-            return b-a
-        if (b>a)
-            return b-a-Math.PI*2
-        return b-a+Math.PI*2
-    }
-
-    function thetaChanged() {
-        elements.forEach(function(e) {
-
-
-            // var x = e.parent.rotation.y, 
-            //     y = viewer.controls.theta
-            // var abdist = Math.abs(x - y)
-            // var dist = Math.min((2 * Math.PI) - abdist, abdist)
-
-            var target = viewer.controls.theta
-            target = target-2*Math.PI*Math.floor(target/(2*Math.PI)+0.5)
-            //Math.atan2(Math.sin(target),Math.cos(target))
-
-            TweenMax.killTweensOf(e.parent.rotation)
-            TweenMax.to(e.parent.rotation, 0.5, {
-                y: target,
-                delay: 0.001,
-                ease: 'easeOutQuart'
-            })
         })
     }
 
-    function createText(str) {
-        var wrap = mobile ? window.innerWidth : undefined
+    function aniIn(elements, delay) {
+        delay = delay||0
+        var texts = elements.map(e => e.text)
+        var scales = elements.map(e => e.object3d.scale)
 
+        var stagger = 0.1
+        TweenMax.killTweensOf([texts, scales])
+        TweenMax.staggerTo(texts, 1.0, {
+            opacity: 1,
+            delay: delay
+        }, stagger)
+        TweenMax.staggerTo(scales, 1.0, {
+            y: 1,
+            delay: delay,
+            ease: 'easeOutExpo'
+        }, stagger)
+
+        stagger = 0.05
+        TweenMax.staggerTo(texts, 1.0, {
+            opacity: 0,
+            delay: delay + textTimeout
+        }, stagger)
+        TweenMax.staggerTo(scales, 1.0, {
+            y: 0,
+            ease: 'easeOutExpo',
+            delay: delay + textTimeout + 0.05
+        }, stagger)
+    }
+
+    function createText(str, size) {
         var text = TextElement(viewer.renderer, {
-            text: str,
             font: font,
+            text: str,
             padding: -4,
             color: 0xfafafa,
             textures: [ fontTex ]
         })
 
         var textObj = new THREE.Object3D()
-        
-        text.opacity = 0
         textObj.position.set(0, 0, 0)
-        textObj.scale.y = 0
-        position(text)
 
         var parent = new THREE.Object3D()
-        // parent.rotation.y = Math.PI/2
         parent.position.set(0,-1.8,0)
         parent.add(textObj)
         viewer.scene.add(parent)
 
-        animIn(startDelay, phrases[0], text, textObj, function() {
-            loop(text, textObj, textTimeout)
-        })
-
         return {
+            size: size,
             text: text,
             object3d: textObj,
             parent: parent
         }
     }
 
-    function position(text) {
+    function layout(elements) {
+        var y = 0
+
+        elements.forEach(function(e, i) {
+            e.text.element.align = 'center'
+            e.text.element.layout(600)
+            position(e.text, y, e.size)
+            y -= e.text.element.getBounds().height + e.text.element.getAscender()/4
+        })
+    }
+
+    function position(text, y, scale) {
+        var s = number(scale, 1)
+        
         var SCALE = 0.007
         mat4.identity(text.transform)
         mat4.scale(text.transform, text.transform, [SCALE,SCALE,SCALE])
 
         var bounds = text.element.getBounds()
-        var translation = [-bounds.width/2, -bounds.height, 0]
+        var translation = [-s*bounds.width/2, -s*bounds.height + (y||0), 0]
         mat4.translate(text.transform, text.transform, translation)
 
-        var s = 1
         var size = [s,s,s]
         mat4.scale(text.transform, text.transform, size)
     }
 
-    function singleLoop(str, text, textObj) {
-        animIn(0, str, text, textObj, function() {
-            animOut(text, textObj, textTimeout)
-        }.bind(this))
-    }
-
-    function animOut(text, textObj, delay) {
-        TweenMax.to(textObj.scale, 1, {
-            y: 0,
-            delay: delay,
-            ease: 'easeOutExpo'
-        })
-        TweenMax.to(text, 0.5, {
-            opacity: 0,
-            delay: delay,
-            ease: 'easeOutQuad'
-        })
-    }
-
-    function animIn(delay, str, text, textObj, onComplete) {
-        TweenMax.killTweensOf([text, textObj])
-
-        TweenMax.to(text, 1, {
-            opacity: 1,
-            delay: delay,
-            onStart: function(str, curText, curObj) {
-                curText.element.text = str
-                curText.element.align = 'center'
-                curText.element.layout(600)
-                curObj.scale.y = 0
-                position(curText)
-
-                TweenMax.to(curObj.scale, 1, {
-                    y: 1,
-                    ease: 'easeOutExpo'
-                })
-            }.bind(null, str, text, textObj),
-            onComplete: onComplete
-        })
-    }
-
-    function loop(text, textObj, delay) {
-        if (cancel)
-            return
-        delay = delay||0
-
-        tween = TweenMax.delayedCall(delay, function() {
-            animOut(text, textObj)
-
-            var str = nextPhrase()
-
-            if (!str) {
-                cancel = true
-                return
-            }
-
-            animIn(1.0, str, text, textObj, loop.bind(null, text, textObj, textTimeout))
-        })
-    }
 
     function killAll() {
         if (tween) {
@@ -215,11 +164,18 @@ module.exports = function(viewer, font) {
             ])
         })
     }
- 
-    function nextPhrase() {
-        phraseIndex++
-        if (phraseIndex > phrases.length-1)
-            return ''
-        return phrases[phraseIndex]//.toLowerCase()
+
+    function thetaChanged() {
+        elements.forEach(function(e) {
+            var target = viewer.controls.theta
+            target = target-2*Math.PI*Math.floor(target/(2*Math.PI)+0.5)
+
+            TweenMax.killTweensOf(e.parent.rotation)
+            TweenMax.to(e.parent.rotation, 0.5, {
+                y: target,
+                delay: 0.001,
+                ease: 'easeOutQuart'
+            })
+        })
     }
 }

@@ -3,7 +3,7 @@ var TweenMax = require('gsap')
 var Circle = require('./circle')
 var lerp = require('lerp')
 
-module.exports = function(viewer) {
+module.exports = function(viewer, earth) {
     var tmpPos = new THREE.Vector3()
     var circle = Circle()
     // var innerCircle = circle.clone()
@@ -20,41 +20,44 @@ module.exports = function(viewer) {
     // innerCircle.material.uniforms.thickness /= 2
     // innerCircle.scale.multiplyScalar(0.5)
 
-    viewer.scene.add(mesh)
+    // viewer.scene.add(mesh)
 
     viewer.on('tick', function() {
+        // if (earth)
+            // mesh.rotation.y = earth.rotation.y
         // circle.lookAt(viewer.camera.position)
     })  
 
-    var lastTween = null
+    var tweens = []
     var tween = {
         value: 0
     }
 
     function aniInCircle() {
-        if (lastTween)
-            lastTween.kill()
+        tweens.forEach(t => t.kill())
+        tweens.length = 0
 
         mesh.visible = true
         tween.value = 1
 
-        TweenMax.to(tween, 1, {
+        circle.material.uniforms.dashed.value = 1
+
+        tweens.push(TweenMax.to(tween, 1, {
             onUpdate: updateMaterials,
-            onStart: setDash(true),
             onComplete: setDash(false),
             value: 0.0, 
             delay: 0.0,
             ease: 'easeOutQuart'
-        })
+        }))
 
-        lastTween = TweenMax.to(tween, 1, {
+        tweens.push(TweenMax.to(tween, 1, {
             ease: 'easeOutExpo',
             value: 1,
             onStart: setDash(true),
             onUpdate: updateMaterials,
             onComplete: setVisible(false),
-            delay: 3.0
-        })
+            delay: 2.5
+        }))
 
         updateMaterials()
     }
@@ -81,11 +84,13 @@ module.exports = function(viewer) {
     return {
         place: function(position, target, radius) {
             tmpPos.copy(position).sub(target).normalize()
-            tmpPos.multiplyScalar(radius * 1.1).add(target)
+            tmpPos.multiplyScalar(radius * 1.1 * (1/CIRCLE_SCALE)).add(target)
 
-            mesh.position.copy(tmpPos)
-            mesh.lookAt(target)
+            circle.position.copy(tmpPos)
+            circle.lookAt(target)
         },
+
+        mesh: mesh,
 
         show: aniInCircle
     }
