@@ -3,6 +3,10 @@ var format = require('format-text')
 var places = require('./places')
 var throttle = require('lodash.throttle')
 
+function strip(str) {
+    return String(str).replace(/\s+/g, ' ').trim()
+}
+
 module.exports = function(text) {
     var errorPhrases = [
         'nope... try again!',
@@ -26,18 +30,17 @@ module.exports = function(text) {
         return coffee(latlng).then(function(data) {
             var str
             if (data.cafe) {
-                str = String(data.cafe).trim()+'\n'+String(data.name).trim()
+                str = strip(data.cafe)+'\n'+strip(data.name)
             } else {
-                var country = String(data.name).trim() //hmm use country or place?
+                var country = strip(data.name) //hmm use country or place?
                 var randList = nothingFound.slice()
                 if (places.hot(country))
                     randList = randList.concat(hotPlaces)
                 var randFound = randList[~~(Math.random()*randList.length)]
                 str = format(randFound, country)
             }
-            text.show(str.trim())
+            text.show(str)
         }).catch(function(err) {
-            // console.log(err)
             text.show(errorPhrases[~~(Math.random()*errorPhrases.length)])
         })
     }, 3500)

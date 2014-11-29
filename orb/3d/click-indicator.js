@@ -4,12 +4,23 @@ var Circle = require('./circle')
 var lerp = require('lerp')
 
 module.exports = function(viewer) {
+    var tmpPos = new THREE.Vector3()
     var circle = Circle()
-    var CIRCLE_SCALE = 0.1
-    circle.visible = false
-    circle.scale.multiplyScalar(CIRCLE_SCALE)
+    // var innerCircle = circle.clone()
 
-    viewer.scene.add(circle)
+    var mesh = new THREE.Object3D()
+    mesh.add(circle)
+    // mesh.add(innerCircle)
+
+    var CIRCLE_SCALE = 0.1
+    mesh.visible = false
+    mesh.scale.multiplyScalar(CIRCLE_SCALE)
+
+    // innerCircle.material = innerCircle.material.clone()
+    // innerCircle.material.uniforms.thickness /= 2
+    // innerCircle.scale.multiplyScalar(0.5)
+
+    viewer.scene.add(mesh)
 
     viewer.on('tick', function() {
         // circle.lookAt(viewer.camera.position)
@@ -24,15 +35,9 @@ module.exports = function(viewer) {
         if (lastTween)
             lastTween.kill()
 
-        var s = 0.0001
-        circle.visible = true
-        // circle.scale.set(s,s,s)
+        mesh.visible = true
         tween.value = 1
 
-        // TweenMax.to(circle.scale, 1, {
-        //     x: CIRCLE_SCALE, y: CIRCLE_SCALE, z: CIRCLE_SCALE, 
-        //     ease: 'easeOutExpo'
-        // })
         TweenMax.to(tween, 1, {
             onUpdate: updateMaterials,
             onStart: setDash(true),
@@ -48,7 +53,7 @@ module.exports = function(viewer) {
             onStart: setDash(true),
             onUpdate: updateMaterials,
             onComplete: setVisible(false),
-            delay: 2.0
+            delay: 3.0
         })
 
         updateMaterials()
@@ -56,7 +61,7 @@ module.exports = function(viewer) {
 
     function setVisible(visible) {
         return function() {
-            circle.visible = visible
+            mesh.visible = visible
         }
     }
 
@@ -74,7 +79,14 @@ module.exports = function(viewer) {
 
 
     return {
-        mesh: circle,
+        place: function(position, target, radius) {
+            tmpPos.copy(position).sub(target).normalize()
+            tmpPos.multiplyScalar(radius * 1.1).add(target)
+
+            mesh.position.copy(tmpPos)
+            mesh.lookAt(target)
+        },
+
         show: aniInCircle
     }
 }

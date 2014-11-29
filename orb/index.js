@@ -25,7 +25,7 @@ require('domready')(function() {
         preload(cache.paths),
         createOrb({ envMap: viewer.cubeCamera.renderTarget }),
         createGift(),
-        loadJSON('fonts/LatoBlack-sdf.json')
+        loadJSON('fonts/IstokBold.json')
     ]).spread( (images, mesh, gift, font) => {
         require('./about')()
 
@@ -62,18 +62,17 @@ require('domready')(function() {
 
         var search = coffee(text)
 
-        var tmpPos = new THREE.Vector3()
+        var tmpSphere = new THREE.Sphere()
 
         //don't let user click right away
         setTimeout(function() {
             console.log("allow")
             earth.on('select', function(latlng, pos) {
-                tmpPos.copy(pos).sub(earth.object3d.position).normalize()
                 var sphere = earth.geometry.boundingSphere
-                tmpPos.multiplyScalar(sphere.radius * 1.1).add(earth.object3d.position)
+                tmpSphere.copy(sphere)
+                tmpSphere.applyMatrix4(earth.object3d.matrixWorld)
 
-                indicator.mesh.position.copy(tmpPos)
-                indicator.mesh.lookAt(earth.object3d.position)
+                indicator.place(pos, earth.object3d.position, tmpSphere.radius)
                 indicator.show()
                 
                 search(latlng)

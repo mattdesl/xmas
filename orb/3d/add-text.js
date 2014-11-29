@@ -3,7 +3,7 @@ var TextElement = require('three-sdf-text')(THREE)
 var TweenMax = require('gsap')
 
 
-var fontImage = require('../texture-cache')('fonts/LatoBlack-sdf.png')
+var fontImage = require('../texture-cache')('fonts/IstokBold.png')
 var mat4 = require('gl-mat4')
 var mouse = require('../mouse')
 
