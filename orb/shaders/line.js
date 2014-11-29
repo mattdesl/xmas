@@ -11,6 +11,7 @@ module.exports = function (opt) {
             thickness: { type: 'f', value: number(opt.thickness, 0.1) },
             opacity: { type: 'f', value: number(opt.opacity, 1.0) },
             diffuse: { type: 'c', value: new THREE.Color(opt.diffuse) },
+            dashed: { type: 'i', value: 1 },
             dashSteps: { type: 'f', value: 12 },
             dashDistance: { type: 'f', value: 0.2 },
             dashSmooth: { type: 'f', value: 0.01 }
@@ -41,12 +42,17 @@ module.exports = function (opt) {
             "uniform float dashSteps;",
             "uniform float dashSmooth;",
             "uniform float dashDistance;",
+            "uniform int dashed;",
 
             "void main() {",
-                "float lineUMod = mod(lineU, 1.0/dashSteps) * dashSteps;",
-                "float dist = dashDistance;",
-                "float dash = smoothstep(dist, dist+dashSmooth, length(lineUMod-0.5));",
-                "gl_FragColor = vec4(vec3(dash), opacity * dash);",
+                "if (dashed == 1) {",
+                    "float lineUMod = mod(lineU, 1.0/dashSteps) * dashSteps;",
+                    "float dist = dashDistance;",
+                    "float dash = smoothstep(dist, dist+dashSmooth, length(lineUMod-0.5));",
+                    "gl_FragColor = vec4(vec3(diffuse * dash), opacity * dash);",
+                "} else {",
+                    "gl_FragColor = vec4(diffuse, opacity);",
+                "}",
             "}"
         ].join("\n")
     }, opt)
