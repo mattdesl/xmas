@@ -13,6 +13,7 @@ var b64 = datauri(path.join(__dirname, img))
 
 html = html.replace(style, 'style/main.min.css')
 html = html.replace(img, b64)
+html = html.replace('{{entry}}', 'build/bundle.js')
 // console.log(minify(html))
 
 fs.writeFileSync(__dirname+'/index.html', html)
