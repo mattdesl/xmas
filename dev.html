@@ -7,9 +7,15 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="style/main.css">
     <style>body { font-family: 'Lato', 'Helvetica', sans-serif; background: #151a17; }</style>
+    <script type="text/javascript">
+    //delayed preloader for bad connections
+    setTimeout(function() {
+        document.querySelector('#spinner').style.visibility = 'visible'
+    }, 2000)
+    </script>
 </head>
 <body>
-    <img src="img/spinner.png" id="spinner" />
+    <img src="img/spinner.png" id="spinner" style="visibility: hidden" />
     
     <div class="about-container g3d">
         <div class="about-cell g3d">

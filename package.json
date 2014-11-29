@@ -67,6 +67,7 @@
     "three": "git://github.com/mattdesl/three.js#reset-state-2",
     "three-effectcomposer": "0.0.1",
     "three-glslify": "^2.0.1",
+    "three-line-2d": "^1.0.2",
     "three-sdf-text": "git://github.com/mattdesl/three-sdf-text#drop-shadow",
     "touch-position": "^1.0.3",
     "triangulate-contours": "^1.0.1",
