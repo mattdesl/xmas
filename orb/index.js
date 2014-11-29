@@ -29,6 +29,14 @@ require('domready')(function() {
     ]).spread( (images, mesh, gift, font) => {
         require('./about')()
 
+        var margin = mobile ? 0 : 20
+        TweenMax.to(viewer, 1.0, {
+            margin: margin, ease: 'easeOutQuart', delay: 1.0,
+            onStart: function() {
+                document.body.style.background = '#fff'
+            }
+        })
+
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
         viewer.controls.target.set(0, 0, 0)
@@ -50,30 +58,11 @@ require('domready')(function() {
         var earth = createEarth(viewer, mesh)
         require('./3d/add-gifts')(viewer, gift)
         var text = require('./3d/add-text')(viewer, font)
-
-        var margin = mobile ? 0 : 20
-        TweenMax.to(viewer, 1.0, {
-            margin: margin, ease: 'easeOutQuart', delay: 1.0,
-            onStart: function() {
-                document.body.style.background = '#fff'
-            }
-        })
+        var indicator = require('./3d/click-indicator')(viewer)
 
         var search = coffee(text)
 
-
-        var circle = require('./circle')()
-        var CIRCLE_SCALE = 0.1
-        circle.visible = false
-        
-        viewer.scene.add(circle)
-
-        viewer.on('tick', function() {
-            // circle.lookAt(viewer.camera.position)
-        })  
-
         var tmpPos = new THREE.Vector3()
-        var lastTween = null
 
         //don't let user click right away
         setTimeout(function() {
@@ -81,34 +70,16 @@ require('domready')(function() {
             earth.on('select', function(latlng, pos) {
                 tmpPos.copy(pos).sub(earth.object3d.position).normalize()
                 var sphere = earth.geometry.boundingSphere
-                tmpPos.multiplyScalar(sphere.radius * 1.0).add(earth.object3d.position)
+                tmpPos.multiplyScalar(sphere.radius * 1.1).add(earth.object3d.position)
 
-                circle.position.copy(tmpPos)
-                circle.lookAt(earth.object3d.position)
-
-                aniInCircle(circle)
-
+                indicator.mesh.position.copy(tmpPos)
+                indicator.mesh.lookAt(earth.object3d.position)
+                indicator.show()
+                
                 search(latlng)
             })
         }, 2000)
 
-        function aniInCircle(circle) {
-            if (lastTween)
-                lastTween.kill()
 
-            var s = 0.0001
-            circle.visible = true
-            circle.scale.set(s,s,s)
-            TweenMax.to(circle.scale, 1, {
-                x: CIRCLE_SCALE, y: CIRCLE_SCALE, z: CIRCLE_SCALE, 
-                ease: 'easeOutExpo'
-            })
-
-            lastTween = TweenMax.to(circle.scale, 0.5, {
-                ease: 'easeOutExpo',
-                x: s, y: s, z: s,
-                delay: 2.0
-            })
-        }
     })
 })
