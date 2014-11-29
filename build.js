@@ -11,8 +11,8 @@ var style = 'style/main.css'
 
 html = html.replace(style, 'style/main.min.css')
 html = inline(html, 'img/spinner.png')
-html = inline(html, 'img/powered-by-google-on-white@2x.png')
-html = html.replace('{{entry}}', 'build/bundle.js')
+// html = inline(html, 'img/powered-by-google-on-white@2x.png')
+html = html.replace('{{entry}}', 'build/bundle.js.gz')
 
 console.log(minify(html, {
     removeComments: true,
