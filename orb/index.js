@@ -76,10 +76,54 @@ require('domready')(function() {
             })
         }, 3500)
 
+
+        var circle = require('./circle')()
+        var CIRCLE_SCALE = 0.1
+        circle.visible = false
+        
+        viewer.scene.add(circle)
+
+        viewer.on('tick', function() {
+            // circle.lookAt(viewer.camera.position)
+        })  
+
+        var tmpPos = new THREE.Vector3()
+        var lastTween = null
+
         //don't let user click right away
         setTimeout(function() {
             console.log("allow")
-            earth.on('select', search)
-        }, 6000)
+            earth.on('select', function(latlng, pos) {
+                tmpPos.copy(pos).sub(earth.object3d.position).normalize()
+                var sphere = earth.geometry.boundingSphere
+                tmpPos.multiplyScalar(sphere.radius * 1.0).add(earth.object3d.position)
+
+                circle.position.copy(tmpPos)
+                circle.lookAt(earth.object3d.position)
+
+                aniInCircle(circle)
+
+                search(latlng)
+            })
+        }, 2000)
+
+        function aniInCircle(circle) {
+            if (lastTween)
+                lastTween.kill()
+
+            var s = 0.0001
+            circle.visible = true
+            circle.scale.set(s,s,s)
+            TweenMax.to(circle.scale, 1, {
+                x: CIRCLE_SCALE, y: CIRCLE_SCALE, z: CIRCLE_SCALE, 
+                ease: 'easeOutExpo'
+            })
+
+            lastTween = TweenMax.to(circle.scale, 0.5, {
+                ease: 'easeOutExpo',
+                x: s, y: s, z: s,
+                delay: 2.0
+            })
+        }
     })
 })

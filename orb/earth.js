@@ -80,12 +80,14 @@ module.exports = function(viewer, mesh) {
 
         if (hit) {
             var latlng = getLatLng(tmpPos, tmpSphere.radius, -earth.rotation.y)
-            emitter.emit('select', latlng)
+            emitter.emit('select', latlng, tmpPos.clone())
         }
     })
 
     update(0.0)
 
+    emitter.object3d = earth
+    emitter.geometry = sphere
     return emitter
 
     function update(dt) {
