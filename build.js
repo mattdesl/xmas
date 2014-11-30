@@ -14,12 +14,12 @@ html = inline(html, 'img/spinner.png')
 // html = inline(html, 'img/powered-by-google-on-white@2x.png')
 html = html.replace('{{entry}}', 'build/bundle.js.gz')
 
-console.log(minify(html, {
+html = minify(html, {
     removeComments: true,
     collapseWhitespace: true,
     minifyJS: true,
     minifyCSS: true
-}))
+})
 
 fs.writeFileSync(__dirname+'/index.html', html)
 
