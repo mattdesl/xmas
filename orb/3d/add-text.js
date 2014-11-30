@@ -41,7 +41,7 @@ module.exports = function(viewer, font) {
         lastTheta = viewer.controls.theta
     })
 
-    var show = function(texts, delay) {
+    var show = function(texts, delay, outTime) {
         killAll()
         setHidden(elements)
 
@@ -53,12 +53,12 @@ module.exports = function(viewer, font) {
         })
         layout(elements)
 
-        aniIn(elements, delay)
+        aniIn(elements, delay, outTime)
         // singleLoop(text, e.text, e.object3d)
     }
 
 
-    show(intro, startDelay)
+    show(intro, startDelay, 3)
 
     return {
         show: show,
@@ -74,7 +74,7 @@ module.exports = function(viewer, font) {
         })
     }
 
-    function aniIn(elements, delay) {
+    function aniIn(elements, delay, outTime) {
         delay = delay||0
         var texts = elements.map(e => e.text)
         var scales = elements.map(e => e.object3d.scale)
@@ -91,7 +91,8 @@ module.exports = function(viewer, font) {
             ease: 'easeOutExpo'
         }, stagger)
 
-        aniOut(elements, delay + textTimeout)
+        var timeout = typeof outTime === 'number' ? outTime : textTimeout
+        aniOut(elements, delay + timeout)
     }
 
     function aniOut(elements, delay) {
