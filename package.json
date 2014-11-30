@@ -19,6 +19,7 @@
     "bmfont-lato": "^2.0.0",
     "brfs": "^1.2.0",
     "bunny": "^1.0.1",
+    "canvas-app": "^2.4.0",
     "canvas-fit": "^1.2.0",
     "canvas-orbit-camera": "^1.0.0",
     "canvas-testbed": "^1.0.3",
@@ -31,7 +32,6 @@
     "extract-svg-path": "^1.0.0",
     "fastclick": "^1.0.3",
     "format-text": "0.0.3",
-    "frontend-npm-goodies": "git://github.com/mattdesl/frontend-npm-goodies",
     "getboundingbox": "^1.0.0",
     "gl-basic-shader": "^1.2.2",
     "gl-clear": "0.0.1",
@@ -78,6 +78,7 @@
     "verlet-constraint": "^1.0.3",
     "verlet-point": "^1.2.1",
     "verlet-system": "^1.0.15",
+    "webgl-context": "^1.2.1",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
@@ -91,12 +92,12 @@
   },
   "scripts": {
     "test": "node test.js",
-    "disc": "browserify orb/index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
+    "disc": "browserify index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
     "style": "cleancss style/main.css -o style/main.min.css",
     "build": "npm run style && node build.js && npm run bundle && npm run compress",
     "compress": "gzip -c build/bundle.js > build/bundle.js.gz",
-    "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
-    "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
+    "bundle": "mkdir -p build && browserify index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
+    "orb": "beefy index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
   "repository": {

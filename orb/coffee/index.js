@@ -16,8 +16,7 @@ module.exports = function(text) {
         'lots of fish, not so much hot cocoa'
     ]
     var nothingFound = [
-        'no hot cocoa here\n{0}',
-        'not much around here\n{0}',
+        'no results\n{0}',
         'nothing found\n{0}',
     ]
     var hotPlaces = [

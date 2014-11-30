@@ -3,9 +3,14 @@ var config = require('../config')
 var mobile = require('../is-mobile')
 var addEvent = require('add-event-listener')
 var Emitter = require('events/')
+var isSafari = require('../is-old-safari')
 
 module.exports = function() {
     // require('fastclick')(document.body)
+
+    //safari can't seem to handle CSS 3D animations
+    //on top of the webgl content?!?!
+    var animations = !mobile && !isSafari
 
     var about = document.querySelector('.about')
     var spinner = document.querySelector('#spinner')
@@ -22,7 +27,7 @@ module.exports = function() {
     })
 
     TweenMax.set(openAbout, { 
-        display: 'block', padding: mobile?20:40, y: -100 
+        display: 'block', margin: mobile?0:20, y: -100 
     })
     if (mobile) //kinda ugly
         document.querySelector('.google').style.right = '10px'
@@ -39,14 +44,14 @@ module.exports = function() {
         ev.preventDefault()
         emitter.open = !emitter.open
         if (emitter.open) {
-            if (!mobile) aniIn()
+            if (animations) aniIn()
             emitter.emit('open')
         }
         else {
-            if (!mobile) aniOut()
+            if (animations) aniOut()
             emitter.emit('closed')
         }
-        if (mobile)
+        if (!animations)
             about.style.display = emitter.open ? 'block' : 'none'
     }
 
@@ -56,7 +61,10 @@ module.exports = function() {
     function tapClose(ev) {
         ev.preventDefault()
         emitter.open = false
-        if (!mobile) aniOut()
+        if (animations) 
+            aniOut()
+        else 
+            about.style.display = 'none'
     }
     addEvent(closeAbout, 'click', tapClose)
     addEvent(closeAbout, 'touchstart', tapClose)
