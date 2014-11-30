@@ -5,7 +5,7 @@ var addEvent = require('add-event-listener')
 var Emitter = require('events/')
 
 module.exports = function() {
-    require('fastclick')(document.body)
+    // require('fastclick')(document.body)
 
     var about = document.querySelector('.about')
     var spinner = document.querySelector('#spinner')
@@ -22,8 +22,11 @@ module.exports = function() {
     })
 
     TweenMax.set(openAbout, { 
-        display: 'block', margin: mobile?20:40, y: -100 
+        display: 'block', padding: mobile?20:40, y: -100 
     })
+    if (mobile) //kinda ugly
+        document.querySelector('.google').style.right = '10px'
+
     TweenMax.to(openAbout, 1.0, {
         delay: config.startDelay+0.1,
         y: 0,
@@ -36,14 +39,15 @@ module.exports = function() {
         ev.preventDefault()
         emitter.open = !emitter.open
         if (emitter.open) {
-            aniIn()
+            if (!mobile) aniIn()
             emitter.emit('open')
         }
         else {
-            aniOut()
+            if (!mobile) aniOut()
             emitter.emit('closed')
         }
-        // about.style.display = emitter.open ? 'block' : 'none'
+        if (mobile)
+            about.style.display = emitter.open ? 'block' : 'none'
     }
 
     addEvent(openAbout, 'click', tap)

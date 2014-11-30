@@ -128,7 +128,8 @@ a, a:visited, a:active, a:link {
   display: inline-block;
   position: absolute;
   top: 0px;
-  margin: 40px;
+  margin: 0px;
+  padding: 40px;
   right: 0px;
   color: white;
   font-size: 24px;
