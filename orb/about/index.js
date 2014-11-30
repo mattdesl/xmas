@@ -56,7 +56,7 @@ module.exports = function() {
     function tapClose(ev) {
         ev.preventDefault()
         emitter.open = false
-        aniOut()
+        if (!mobile) aniOut()
     }
     addEvent(closeAbout, 'click', tapClose)
     addEvent(closeAbout, 'touchstart', tapClose)
