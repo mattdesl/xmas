@@ -2,12 +2,16 @@ var TweenMax = require('gsap')
 var config = require('../config')
 var mobile = require('../is-mobile')
 var addEvent = require('add-event-listener')
+var Emitter = require('events/')
 
 module.exports = function() {
     var about = document.querySelector('.about')
     var spinner = document.querySelector('#spinner')
     var openAbout = document.querySelector('.about-button')
     var closeAbout = document.querySelector('.close-button')
+
+    var emitter = new Emitter()
+    emitter.open = false
 
     TweenMax.to(spinner, 1, {
         autoAlpha: 0,
@@ -24,21 +28,31 @@ module.exports = function() {
         ease: 'easeOutExpo'
     })
 
-    var open = false
     var lastTween = null
 
     addEvent(openAbout, 'click', function(ev) {
-        open = !open
-        if (open) aniIn()
-        else aniOut()
+        emitter.open = !emitter.open
+        if (emitter.open) {
+            aniIn()
+            emitter.emit('open')
+        }
+        else {
+            aniOut()
+            emitter.emit('closed')
+        }
 
-        // about.style.display = open ? 'block' : 'none'
+        
+
+        // about.style.display = emitter.open ? 'block' : 'none'
     })
 
     addEvent(closeAbout, 'click', function(ev) {
-        open = false
+        emitter.open = false
         aniOut()
     })
+
+    return emitter
+        
 
     function aniIn() {
         if (lastTween) 

@@ -4,7 +4,7 @@ var places = require('./places')
 var throttle = require('lodash.throttle')
 
 function strip(str) {
-    return String(str).replace(/\s+/g, ' ').trim()
+    return String(str||'').replace(/\s+/g, ' ').replace(/[^\x00-\x7F]/g, '').trim()
 }
 
 module.exports = function(text) {
@@ -19,7 +19,7 @@ module.exports = function(text) {
     var nothingFound = [
         'no hot cocoa here\n{0}',
         'not much around here\n{0}',
-        'nothing found near\n{0}',
+        'nothing found\n{0}',
     ]
     var hotPlaces = [
         'seems a bit hot there already\n{0}',
@@ -28,8 +28,9 @@ module.exports = function(text) {
     return throttle(function(latlng) {
         return coffee(latlng).then(function(data) {
             var str
-            if (data.cafe) {
-                str = strip(data.cafe)+'\n'+strip(data.name)
+            var cafe = strip(data.cafe)
+            if (cafe) {
+                str = cafe+'\n'+strip(data.name)
             } else {
                 var country = strip(data.country) //hmm use country or place?
                 var randList = nothingFound.slice()

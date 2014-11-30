@@ -42,7 +42,7 @@ module.exports = function(viewer, font) {
 
     var show = function(texts, delay) {
         killAll()
-        hide(elements)
+        setHidden(elements)
 
         if (typeof texts === 'string')
             texts = [texts]
@@ -56,14 +56,17 @@ module.exports = function(viewer, font) {
         // singleLoop(text, e.text, e.object3d)
     }
 
+
     show(intro, startDelay)
 
     return {
-
-        show: show
+        show: show,
+        hide: function() {
+            aniOut(elements)
+        }
     }
 
-    function hide(elements) {
+    function setHidden(elements) {
         elements.forEach(function(e) {
             e.text.opacity = 0
             e.object3d.scale.y = 0
@@ -87,15 +90,23 @@ module.exports = function(viewer, font) {
             ease: 'easeOutExpo'
         }, stagger)
 
-        stagger = 0.05
+        aniOut(elements, delay + textTimeout)
+    }
+
+    function aniOut(elements, delay) {
+        delay = delay||0
+        var stagger = 0.05
+        var texts = elements.map(e => e.text)
+        var scales = elements.map(e => e.object3d.scale)
+
         TweenMax.staggerTo(texts, 1.0, {
             opacity: 0,
-            delay: delay + textTimeout
+            delay: delay
         }, stagger)
         TweenMax.staggerTo(scales, 1.0, {
             y: 0,
             ease: 'easeOutExpo',
-            delay: delay + textTimeout + 0.05
+            delay: delay
         }, stagger)
     }
 

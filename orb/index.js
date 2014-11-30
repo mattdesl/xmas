@@ -27,7 +27,7 @@ require('domready')(function() {
         createGift(),
         loadJSON('fonts/IstokBold.json')
     ]).spread( (images, mesh, gift, font) => {
-        require('./about')()
+        var about = require('./about')()
 
         var margin = mobile ? 0 : 20
         TweenMax.to(viewer, 1.0, {
@@ -58,17 +58,20 @@ require('domready')(function() {
         var earth = createEarth(viewer, mesh)
         require('./3d/add-gifts')(viewer, gift)
         var text = require('./3d/add-text')(viewer, font)
-        var indicator = require('./3d/click-indicator')(viewer, earth.objec)
+        var indicator = require('./3d/click-indicator')(viewer, earth.object3d)
 
-        viewer.scene.add(indicator.mesh)
+        //hide text when menu is opening
+        about.on('open', text.hide.bind(null))
 
         var search = coffee(text)
         var tmpSphere = new THREE.Sphere()
 
         //don't let user click right away
         setTimeout(function() {
-            console.log("allow")
             earth.on('select', function(latlng, pos) {
+                if (about.open)
+                    return
+
                 var sphere = earth.geometry.boundingSphere
                 tmpSphere.copy(sphere)
                 tmpSphere.applyMatrix4(earth.object3d.matrixWorld)

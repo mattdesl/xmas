@@ -58,13 +58,15 @@ body {
 
 .google {
   margin-top: 15px;
+  position: absolute;
+  bottom: -50px;
 }
 
 h1 {
   font-style: italic;
   font-size: 32px;
   margin-top: 0px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 p {

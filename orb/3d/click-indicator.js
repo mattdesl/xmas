@@ -5,12 +5,18 @@ var lerp = require('lerp')
 
 module.exports = function(viewer, earth) {
     var tmpPos = new THREE.Vector3()
+    var UP_AXIS = new THREE.Vector3(0, 1, 0)
+
     var circle = Circle()
     // var innerCircle = circle.clone()
 
     var mesh = new THREE.Object3D()
     mesh.add(circle)
     // mesh.add(innerCircle)
+
+
+    viewer.scene.add(mesh)
+
 
     var CIRCLE_SCALE = 0.1
     mesh.visible = false
@@ -23,8 +29,9 @@ module.exports = function(viewer, earth) {
     // viewer.scene.add(mesh)
 
     viewer.on('tick', function() {
-        // if (earth)
-            // mesh.rotation.y = earth.rotation.y
+        if (earth) {
+            mesh.rotation.y = earth.rotation.y
+        }
         // circle.lookAt(viewer.camera.position)
     })  
 
@@ -84,6 +91,11 @@ module.exports = function(viewer, earth) {
     return {
         place: function(position, target, radius) {
             tmpPos.copy(position).sub(target).normalize()
+
+
+            var theta = earth.rotation.y
+            tmpPos.applyAxisAngle(UP_AXIS, -theta)
+
             tmpPos.multiplyScalar(radius * 1.1 * (1/CIRCLE_SCALE)).add(target)
 
             circle.position.copy(tmpPos)
