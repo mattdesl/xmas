@@ -97,7 +97,7 @@
     "test": "node test.js",
     "disc": "browserify index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
     "style": "cleancss style/main.css -o style/main.min.css",
-    "build": "npm run style && node build.js && npm run bundle && npm run compress",
+    "build": "npm run style && node build.js && npm run bundle && npm run compress && ./zip.sh",
     "compress": "gzip -c build/bundle.js > build/bundle.js.gz",
     "core": "browserify index.js -x webglew -t 6to5-browserify -t brfs -t glslify | uglifyjs -cm > build/core.js",
     "libs": "browserify node_modules/webglew -r webglew | uglifyjs -cm > build/libs.js",
