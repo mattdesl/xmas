@@ -9,7 +9,7 @@ var mouse = require('../mouse')
 
 var mobile = require('../is-mobile')
 
-var intro = ['tap the Earth\nto find some hot cocoa', 'click to drag']
+var intro = ['tap the Earth\nto find some hot cocoa', 'click to rotate']
 var textTimeout = 2
 
 module.exports = function(viewer, font) {
