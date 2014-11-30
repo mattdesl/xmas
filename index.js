@@ -13,7 +13,7 @@ domready(function() {
         el.style.display = 'block'
 
         var bg = document.getElementById('nowebgl-background')
-        bg.style['background-image'] = 'url(../img/nowebgl.jpg)'
+        bg.style['background-image'] = 'url(img/nowebgl.jpg)'
     } else {
         create()
             .catch(function(err) {
