@@ -15,6 +15,8 @@ var cache = require('./texture-cache')
 var config = require('./config')
 var coffee = require('./coffee')
 
+var throttle = require('lodash.throttle')
+
 // var $ = document.querySelector
 
 require('domready')(function() {
@@ -66,22 +68,24 @@ require('domready')(function() {
         var search = coffee(text)
         var tmpSphere = new THREE.Sphere()
 
+        var handleSearch = throttle(function(latlng, pos) {
+            if (about.open)
+                return
+
+            var sphere = earth.geometry.boundingSphere
+            tmpSphere.copy(sphere)
+            tmpSphere.applyMatrix4(earth.object3d.matrixWorld)
+
+            indicator.place(pos, earth.object3d.position, tmpSphere.radius)
+            indicator.show()
+            
+            search(latlng)
+        }, 3000, { leading: true, trailing: true })
+
         //don't let user click right away
         setTimeout(function() {
-            earth.on('select', function(latlng, pos) {
-                if (about.open)
-                    return
-
-                var sphere = earth.geometry.boundingSphere
-                tmpSphere.copy(sphere)
-                tmpSphere.applyMatrix4(earth.object3d.matrixWorld)
-
-                indicator.place(pos, earth.object3d.position, tmpSphere.radius)
-                indicator.show()
-                
-                search(latlng)
-            })
-        }, 3500)
+            earth.on('select', handleSearch)
+        }, 3000)
 
 
     })
