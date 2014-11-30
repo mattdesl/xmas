@@ -1,5 +1,5 @@
 var THREE = require('three')
-var createApp = require('canvas-testbed')
+var createApp = require('canvas-app')
 var number = require('as-number')
 var MakeOrbitController = require('./three-orbit-controls')
 var createBackground = require('gl-vignette-background')
@@ -18,7 +18,7 @@ function setup(THREE, OrbitController, opt) {
     viewer.margin = 0
 
     opt = opt||{}
-    createApp(render, start, {
+    var app = createApp(render, {
         canvas: opt.canvas,
         context: 'webgl',
         contextAttributes: {
@@ -28,6 +28,8 @@ function setup(THREE, OrbitController, opt) {
         onResize: handleResize,
         // retina: false
     })
+
+    start(app.context, app.width, app.height)
 
     var background, bgStyle = { scale: [1, 1] }
     var dpr = window.devicePixelRatio||1
@@ -115,6 +117,8 @@ function setup(THREE, OrbitController, opt) {
             noiseAlpha: 0.4,
             offset: [ -0.05, -0.15 ]
         })
+
+        app.start()
     }
 
     function handleResize(width, height) {

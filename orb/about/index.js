@@ -5,6 +5,8 @@ var addEvent = require('add-event-listener')
 var Emitter = require('events/')
 
 module.exports = function() {
+    require('fastclick')(document.body)
+
     var about = document.querySelector('.about')
     var spinner = document.querySelector('#spinner')
     var openAbout = document.querySelector('.about-button')
@@ -30,7 +32,8 @@ module.exports = function() {
 
     var lastTween = null
 
-    addEvent(openAbout, 'click', function(ev) {
+    function tap(ev) {
+        ev.preventDefault()
         emitter.open = !emitter.open
         if (emitter.open) {
             aniIn()
@@ -40,16 +43,19 @@ module.exports = function() {
             aniOut()
             emitter.emit('closed')
         }
-
-        
-
         // about.style.display = emitter.open ? 'block' : 'none'
-    })
+    }
 
-    addEvent(closeAbout, 'click', function(ev) {
+    addEvent(openAbout, 'click', tap)
+    addEvent(openAbout, 'touchstart', tap)
+
+    function tapClose(ev) {
+        ev.preventDefault()
         emitter.open = false
         aniOut()
-    })
+    }
+    addEvent(closeAbout, 'click', tapClose)
+    addEvent(closeAbout, 'touchstart', tapClose)
 
     return emitter
         

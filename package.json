@@ -29,6 +29,7 @@
     "eases": "^1.0.2",
     "events": "^1.0.2",
     "extract-svg-path": "^1.0.0",
+    "fastclick": "^1.0.3",
     "format-text": "0.0.3",
     "frontend-npm-goodies": "git://github.com/mattdesl/frontend-npm-goodies",
     "getboundingbox": "^1.0.0",
