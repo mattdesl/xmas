@@ -17,10 +17,20 @@ var coffee = require('./coffee')
 
 var throttle = require('lodash.throttle')
 
+//desktop safari 7.0.3 context alpha:true doesn't work with scissor testing?
+// function useAlpha() {
+//     var ua = (navigator.userAgent||'').toLowerCase()
+//     if (ua.search("safari") >= 0 && ua.search("chrome") < 0
+//             && !mobile) {
+//         return true
+//     }
+//     return false
+// }
 
 require('domready')(function() {
-    document.body.style.background = '#151a17'
+    document.body.style['background'] = '#151a17'
     var viewer = create({
+        alpha: true,
         canvas: document.querySelector('#canvas')
     })
 
@@ -34,9 +44,11 @@ require('domready')(function() {
 
         var margin = mobile ? 0 : 20
         TweenMax.to(viewer, 1.0, {
-            margin: margin, ease: 'easeOutQuart', delay: 1.0,
+            margin: margin, 
+            ease: 'easeOutQuart', 
+            delay: 1.0,
             onStart: function() {
-                document.body.style.background = '#fff'
+                document.body.style['background'] = 'white'
             }
         })
 

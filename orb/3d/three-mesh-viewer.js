@@ -14,7 +14,6 @@ module.exports = function(THREE) {
 
 function setup(THREE, OrbitController, opt) {
     var viewer = new Emitter()
-
     viewer.margin = 0
 
     opt = opt||{}
@@ -23,7 +22,7 @@ function setup(THREE, OrbitController, opt) {
         context: 'webgl',
         contextAttributes: {
             antialias: true,
-            alpha: false
+            alpha: opt.alpha
         },
         onResize: handleResize,
         // retina: false
@@ -42,7 +41,9 @@ function setup(THREE, OrbitController, opt) {
         var pad = viewer.margin 
         
         viewer.renderer.enableScissorTest(false)
-        viewer.renderer.clear()
+        gl.clearColor(1,1,1,1)
+        gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT)
+        // viewer.renderer.clear(true, true, true)
 
         gl.enable(gl.BLEND)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -83,7 +84,7 @@ function setup(THREE, OrbitController, opt) {
             canvas: gl.canvas,
             width: width,
             antialias: true,
-            alpha: false,
+            alpha: opt.alpha,
             height: height,
         })
         viewer.renderer.setClearColor(0xffffff, 1.0)
