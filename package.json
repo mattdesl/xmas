@@ -4,6 +4,7 @@
   "description": "xmas experiments",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
   "author": {
     "name": "Matt DesLauriers",
     "email": "dave.des@gmail.com",
