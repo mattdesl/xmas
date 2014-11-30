@@ -2,6 +2,7 @@ var Promise = require('bluebird')
 var THREE = require('three')
 var create = require('./3d/three-mesh-viewer')(THREE)
 
+var isSafari = require('./is-old-safari')
 var mobile = require('./is-mobile')
 var preload = require('./preload-textures')
 var createOrb = Promise.promisify(require('./3d/create-orb'))
@@ -17,24 +18,14 @@ var coffee = require('./coffee')
 
 var throttle = require('lodash.throttle')
 
-//desktop safari 7.0.3 context alpha:true doesn't work with scissor testing?
-// function useAlpha() {
-//     var ua = (navigator.userAgent||'').toLowerCase()
-//     if (ua.search("safari") >= 0 && ua.search("chrome") < 0
-//             && !mobile) {
-//         return true
-//     }
-//     return false
-// }
-
-require('domready')(function() {
-    document.body.style['background'] = '#151a17'
+module.exports = function app() {
+    document.body.style.background = '#151a17'
     var viewer = create({
-        alpha: true,
+        alpha: false,
         canvas: document.querySelector('#canvas')
     })
 
-    Promise.all([
+    return Promise.all([
         preload(cache.paths),
         createOrb(),
         createGift(),
@@ -42,15 +33,17 @@ require('domready')(function() {
     ]).spread( (images, mesh, gift, font) => {
         var about = require('./about')()
 
-        var margin = mobile ? 0 : 20
-        TweenMax.to(viewer, 1.0, {
-            margin: margin, 
-            ease: 'easeOutQuart', 
-            delay: 1.0,
-            onStart: function() {
-                document.body.style['background'] = 'white'
-            }
-        })
+        if (!isSafari) {
+            var margin = mobile ? 0 : 20
+            TweenMax.to(viewer, 1.0, {
+                margin: margin, 
+                ease: 'easeOutQuart', 
+                delay: 1.0,
+                onStart: function() {
+                    document.body.style.background = 'white'
+                }
+            })
+        }
 
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
@@ -77,7 +70,7 @@ require('domready')(function() {
 
         //hide text when menu is opening
         about.on('open', text.hide.bind(null))
-
+        
         var search = coffee(text)
         var tmpSphere = new THREE.Sphere()
 
@@ -99,7 +92,5 @@ require('domready')(function() {
         setTimeout(function() {
             earth.on('select', handleSearch)
         }, 3000)
-
-
     })
-})
+}
