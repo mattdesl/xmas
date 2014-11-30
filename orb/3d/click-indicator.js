@@ -84,6 +84,7 @@ module.exports = function(viewer, earth) {
     function updateMaterials() {
         circle.material.uniforms.dashDistance.value = lerp(0, 0.6, tween.value)
         circle.material.uniforms.dashSteps.value = lerp(8, 0, tween.value)
+        circle.material.uniforms.thickness.value = lerp(0.2, 0.05, tween.value)
     }
 
 
