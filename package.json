@@ -18,6 +18,7 @@
     "bluebird": "^2.3.11",
     "bmfont-lato": "^2.0.0",
     "brfs": "^1.2.0",
+    "browserify-swap": "^0.2.1",
     "bunny": "^1.0.1",
     "canvas-app": "^2.4.0",
     "canvas-fit": "^1.2.0",
@@ -79,6 +80,7 @@
     "verlet-point": "^1.2.1",
     "verlet-system": "^1.0.15",
     "webgl-context": "^1.2.1",
+    "webglew": "git://github.com/mattdesl/webglew#fix-weakmap",
     "xtend": "^4.0.0"
   },
   "devDependencies": {
@@ -96,7 +98,10 @@
     "style": "cleancss style/main.css -o style/main.min.css",
     "build": "npm run style && node build.js && npm run bundle && npm run compress",
     "compress": "gzip -c build/bundle.js > build/bundle.js.gz",
-    "bundle": "mkdir -p build && browserify index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -cm > build/bundle.js",
+    "core": "browserify index.js -x webglew -t 6to5-browserify -t brfs -t glslify | uglifyjs -cm > build/core.js",
+    "libs": "browserify node_modules/webglew -r webglew | uglifyjs -cm > build/libs.js",
+    "bundle": "mkdir -p build && npm run core && npm run libs && npm run concat",
+    "concat": "cat build/libs.js build/core.js > build/bundle.js",
     "orb": "beefy index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
