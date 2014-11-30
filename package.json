@@ -96,7 +96,7 @@
     "style": "cleancss style/main.css -o style/main.min.css",
     "build": "npm run style && node build.js && npm run bundle && npm run compress",
     "compress": "gzip -c build/bundle.js > build/bundle.js.gz",
-    "bundle": "mkdir -p build && browserify index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
+    "bundle": "mkdir -p build && browserify index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -cm > build/bundle.js",
     "orb": "beefy index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
