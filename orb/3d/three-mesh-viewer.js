@@ -19,7 +19,12 @@ function setup(THREE, OrbitController, opt) {
 
     opt = opt||{}
     createApp(render, start, {
+        canvas: opt.canvas,
         context: 'webgl',
+        contextAttributes: {
+            antialias: true,
+            alpha: false
+        },
         onResize: handleResize,
         // retina: false
     })
@@ -75,6 +80,7 @@ function setup(THREE, OrbitController, opt) {
         viewer.renderer = new THREE.WebGLRenderer({
             canvas: gl.canvas,
             width: width,
+            antialias: true,
             alpha: false,
             height: height,
         })

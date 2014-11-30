@@ -17,11 +17,12 @@ var coffee = require('./coffee')
 
 var throttle = require('lodash.throttle')
 
-// var $ = document.querySelector
 
 require('domready')(function() {
     document.body.style.background = '#151a17'
-    var viewer = create()
+    var viewer = create({
+        canvas: document.querySelector('#canvas')
+    })
 
     Promise.all([
         preload(cache.paths),
