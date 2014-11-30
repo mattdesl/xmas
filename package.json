@@ -92,7 +92,7 @@
     "test": "node test.js",
     "disc": "browserify orb/index.js --full-paths -t 6to5-browserify -t brfs -t glslify | discify --open",
     "style": "cleancss style/main.css -o style/main.min.css",
-    "build": "npm run style && node build.js && npm run bundle && npm run compress",
+    "build": "npm run style && node build.js -c && npm run bundle && npm run compress",
     "compress": "gzip -c build/bundle.js > build/bundle.js.gz",
     "bundle": "mkdir -p build && browserify orb/index.js -t 6to5-browserify -t brfs -t glslify | uglifyjs -m > build/bundle.js",
     "orb": "beefy orb/index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"

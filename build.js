@@ -6,13 +6,14 @@ var minify = require('html-minify').minify
 
 var html = fs.readFileSync(__dirname+'/dev.html', 'utf8')
 
+var GZIP = process.argv[2] === '-c'
 
 var style = 'style/main.css'
 
 html = html.replace(style, 'style/main.min.css')
 html = inline(html, 'img/spinner.png')
 // html = inline(html, 'img/powered-by-google-on-white@2x.png')
-html = html.replace('{{entry}}', 'build/bundle.js.gz')
+html = html.replace('{{entry}}', GZIP ? 'build/bundle.js.gz' : 'build/bundle.js')
 
 html = minify(html, {
     removeComments: true,
