@@ -13,18 +13,11 @@ module.exports = function() {
     var animations = !mobile && !isSafari
 
     var about = document.querySelector('.about')
-    var spinner = document.querySelector('#spinner')
     var openAbout = document.querySelector('.about-button')
     var closeAbout = document.querySelector('.close-button')
 
     var emitter = new Emitter()
     emitter.open = false
-
-    TweenMax.to(spinner, 1, {
-        autoAlpha: 0,
-        ease: 'easeOutExpo',
-        delay: 0.35
-    })
 
     TweenMax.set(openAbout, { 
         display: 'block', margin: mobile?0:20, y: -100 

@@ -24,6 +24,7 @@ module.exports = function app() {
         alpha: false,
         canvas: document.querySelector('#canvas')
     })
+    var spinner = document.querySelector('#spinner')
 
     return Promise.all([
         preload(cache.paths),
@@ -31,19 +32,24 @@ module.exports = function app() {
         createGift(),
         loadJSON('fonts/IstokBold.json')
     ]).spread( (images, mesh, gift, font) => {
-        var about = require('./about')()
+        TweenMax.to(spinner, 1, {
+            autoAlpha: 0,
+            ease: 'easeOutExpo',
+            delay: 0.35
+        })
+        // var about = require('./about')()
 
-        if (!isSafari) {
-            var margin = mobile ? 0 : 20
-            TweenMax.to(viewer, 1.0, {
-                margin: margin, 
-                ease: 'easeOutQuart', 
-                delay: 1.0,
-                onStart: function() {
-                    document.body.style.background = 'white'
-                }
-            })
-        }
+        // if (!isSafari) {
+        //     var margin = mobile ? 0 : 20
+        //     TweenMax.to(viewer, 1.0, {
+        //         margin: margin, 
+        //         ease: 'easeOutQuart', 
+        //         delay: 1.0,
+        //         onStart: function() {
+        //             document.body.style.background = 'white'
+        //         }
+        //     })
+        // }
 
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
@@ -69,14 +75,14 @@ module.exports = function app() {
         var indicator = require('./3d/click-indicator')(viewer, earth.object3d)
 
         //hide text when menu is opening
-        about.on('open', text.hide.bind(null))
+        // about.on('open', text.hide.bind(null))
         
         var search = coffee(text)
         var tmpSphere = new THREE.Sphere()
 
         var handleSearch = throttle(function(latlng, pos) {
-            if (about.open)
-                return
+            // if (about.open)
+            //     return
 
             var sphere = earth.geometry.boundingSphere
             tmpSphere.copy(sphere)
