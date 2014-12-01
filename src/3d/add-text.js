@@ -6,7 +6,7 @@ var number = require('as-number')
 var fontImage = require('../texture-cache')('fonts/IstokBold.png')
 var mat4 = {
     identity: require('gl-mat4/identity'),
-    translation: require('gl-mat4/translation'),
+    translate: require('gl-mat4/translate'),
     scale: require('gl-mat4/scale')
 }
 var mouse = require('../mouse')

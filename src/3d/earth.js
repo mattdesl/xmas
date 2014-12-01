@@ -2,7 +2,6 @@ var THREE = require('three')
 var array = require('array-range')
 
 var Emitter = require('events/')
-var syncFloor = require('./sync-floor')
 var lerp = require('lerp')
 
 var TweenMax = require('gsap')
