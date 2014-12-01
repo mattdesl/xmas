@@ -103,7 +103,7 @@
     "libs": "browserify node_modules/webglew -r webglew | uglifyjs -cm > build/libs.js",
     "bundle": "mkdir -p build && npm run core && npm run libs && npm run concat",
     "concat": "cat build/libs.js build/core.js > build/bundle.js",
-    "orb": "beefy index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
+    "start": "beefy index.js --index=dev.html -- -t 6to5-browserify -t brfs -t glslify"
   },
   "keywords": [],
   "repository": {

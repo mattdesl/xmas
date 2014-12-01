@@ -1,5 +1,5 @@
 var domready = require('domready')
-var create = require('./orb')
+var create = require('./src')
 var img = require('img')
 
 domready(function() {
