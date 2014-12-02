@@ -24,6 +24,7 @@ module.exports = function app() {
         alpha: false,
         canvas: document.querySelector('#canvas')
     })
+
     var spinner = document.querySelector('#spinner')
 
     return Promise.all([
@@ -97,6 +98,6 @@ module.exports = function app() {
         //don't let user click right away
         setTimeout(function() {
             earth.on('select', handleSearch)
-        }, 3000)
+        }, 2000)
     })
 }
