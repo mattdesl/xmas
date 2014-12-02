@@ -19,6 +19,13 @@ body {
   perspective: 1500px;
 }
 
+.google-overlay {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  pointer-events: none;
+}
+
 #nowebgl {
   color: white;
   font-size: 20px;

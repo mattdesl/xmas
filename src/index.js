@@ -39,7 +39,8 @@ module.exports = function app() {
             delay: 0.35
         })
         // var about = require('./about')()
-
+        require('./about/google')()
+        
         // if (!isSafari) {
         //     var margin = mobile ? 0 : 20
         //     TweenMax.to(viewer, 1.0, {
