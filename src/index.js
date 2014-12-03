@@ -38,21 +38,8 @@ module.exports = function app() {
             ease: 'easeOutExpo',
             delay: 0.35
         })
-        // var about = require('./about')()
         require('./about/google')()
         
-        // if (!isSafari) {
-        //     var margin = mobile ? 0 : 20
-        //     TweenMax.to(viewer, 1.0, {
-        //         margin: margin, 
-        //         ease: 'easeOutQuart', 
-        //         delay: 1.0,
-        //         onStart: function() {
-        //             document.body.style.background = 'white'
-        //         }
-        //     })
-        // }
-
         viewer.scene.fog = new THREE.FogExp2(0x181f1e, 0.05)
 
         viewer.controls.target.set(0, 0, 0)
@@ -76,16 +63,10 @@ module.exports = function app() {
         var text = require('./3d/add-text')(viewer, font)
         var indicator = require('./3d/click-indicator')(viewer, earth.object3d)
 
-        //hide text when menu is opening
-        // about.on('open', text.hide.bind(null))
-        
         var search = coffee(text)
         var tmpSphere = new THREE.Sphere()
 
         var handleSearch = throttle(function(latlng, pos) {
-            // if (about.open)
-            //     return
-
             var sphere = earth.geometry.boundingSphere
             tmpSphere.copy(sphere)
             tmpSphere.applyMatrix4(earth.object3d.matrixWorld)
