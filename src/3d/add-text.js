@@ -117,10 +117,13 @@ module.exports = function(viewer, font) {
     }
 
     function createText(str, size) {
+        var dpr = window.devicePixelRatio||1
+        var smooth = 16 * dpr
         var text = TextElement(viewer.renderer, {
             font: font,
             text: str,
             padding: -4,
+            smoothing: 1/smooth,
             color: 0xfafafa,
             textures: [ fontTex ]
         })

@@ -72,7 +72,7 @@
     "three-effectcomposer": "0.0.1",
     "three-glslify": "^2.0.1",
     "three-line-2d": "^1.0.2",
-    "three-sdf-text": "git://github.com/mattdesl/three-sdf-text#drop-shadow",
+    "three-sdf-text": "git://github.com/mattdesl/three-sdf-text#glslify",
     "touch-position": "^1.0.3",
     "triangulate-contours": "^1.0.1",
     "ua-device-type": "0.0.3",
