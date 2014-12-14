@@ -22,6 +22,14 @@ npm run start
 
 Then open `localhost:9966`
 
+To build:
+
+```
+npm run build
+```
+
+Then take a look at the `zip/` folder.
+
 ## License
 
 MIT, see [LICENSE.md](http://github.com/mattdesl/xmas/blob/master/LICENSE.md) for details.
