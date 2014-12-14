@@ -1,4 +1,4 @@
-rm -f zip/production && \
+rm -f zip/production.zip && \
 zip zip/production.zip -r \
         img/earth1-small.jpg \
         img/powered-by-google-on-non-white@2x.png \

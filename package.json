@@ -90,6 +90,7 @@
     "clean-css": "^2.2.19",
     "datauri": "^0.5.5",
     "html-minifier": "^0.6.9",
+    "html-minify": "^0.3.1",
     "minstache": "^1.2.0",
     "uglify-js": "^2.4.15"
   },
