@@ -2,7 +2,7 @@
 
 ![img](http://i.imgur.com/Eq825Fq.jpg)
 
-[[link]](christmasexperiments.com/experiments/14) - [[mirror]](mattdesl.github.io/xmas)
+[[link]](http://christmasexperiments.com/experiments/14) - [[mirror]](http://mattdesl.github.io/xmas)
 
 Christmas Experiments 2014. Few features:
 
