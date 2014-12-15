@@ -1,6 +1,8 @@
 # xmas
 
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+![img](http://i.imgur.com/Eq825Fq.jpg)
+
+[[link]](christmasexperiments.com/experiments/14) - [[mirror]](mattdesl.github.io/xmas)
 
 Christmas Experiments 2014. Few features:
 
@@ -28,7 +30,7 @@ To build:
 npm run build
 ```
 
-Then take a look at the `zip/` folder.
+Then take a look at the `build/` or `zip/` folder.
 
 ## License
 
