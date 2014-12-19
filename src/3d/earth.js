@@ -9,7 +9,7 @@ var TweenMax = require('gsap')
 var blendShader = require('../shaders/blend')
 var tmpSphere = new THREE.Sphere()
 
-var earthURL = require('../texture-cache')('img/earth1-small.jpg')
+var earthURL = require('../texture-cache')('img/street2.png')
 var config = require('../config')
 var isMobile = require('../is-mobile')
 
@@ -34,8 +34,8 @@ module.exports = function(viewer, mesh) {
     var tex2 = new THREE.Texture()
     
     var tex = THREE.ImageUtils.loadTexture(earthURL, undefined, function() {
-        tex2.image = require('delaunify')(tex.image, { count: 2000 })
-        tex2.needsUpdate = true
+        // tex2.image = require('delaunify')(tex.image, { count: 8000 })
+        // tex2.needsUpdate = true
     })
 
     var mat = new THREE.ShaderMaterial(blendShader({
@@ -52,6 +52,8 @@ module.exports = function(viewer, mesh) {
     var s = 0.001
     earth.scale.set(s,s,s)
     mesh.scale.set(s,s,s)
+    earth.scale.x *= -1;
+
 
     var delay = config.startDelay + 0.25
     TweenMax.fromTo(earth.rotation, 1.0, { y: -Math.PI*0.5 }, {

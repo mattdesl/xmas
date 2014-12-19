@@ -84,13 +84,13 @@ module.exports = function (opt) {
                 THREE.ShaderChunk[ "logdepthbuf_fragment" ],
                 THREE.ShaderChunk[ "map_fragment" ],
 
-                "float dist = distance(origin, vWorldPos1.xyz) / (1.0);",
-                "dist = smoothstep(0.20, 0.81, dist);",
+                // "float dist = distance(origin, vWorldPos1.xyz) / (1.0);",
+                // "dist = smoothstep(0.20, 0.81, dist);",
 
-                "vec4 procColor = texture2D(tProcessed, vUv);",
-                "vec3 blended = max(gl_FragColor.rgb, procColor.rgb);",
-                "vec3 other = mix(procColor.rgb, blended, anim);",
-                "gl_FragColor.rgb = mix(other, gl_FragColor.rgb, 1.0-dist);",
+                // "vec4 procColor = texture2D(tProcessed, vUv);",
+                // "vec3 blended = max(gl_FragColor.rgb, procColor.rgb);",
+                // "vec3 other = mix(procColor.rgb, blended, anim);",
+                // "gl_FragColor.rgb = mix(other, gl_FragColor.rgb, 1.0-dist);",
 
 
                 THREE.ShaderChunk[ "alphamap_fragment" ],

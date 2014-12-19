@@ -47,8 +47,8 @@ module.exports = function app() {
         viewer.controls.rotateSpeed = 0.4
         viewer.controls.minPolarAngle = 30 * Math.PI/180 
         viewer.controls.maxPolarAngle = 150 * Math.PI/180 
-        viewer.controls.minDistance = 4
-        viewer.controls.maxDistance = 9
+        // viewer.controls.minDistance = 4
+        // viewer.controls.maxDistance = 9
         viewer.controls.noPan = true
         viewer.camera.position.set(0, 6, 6)
         
@@ -57,9 +57,9 @@ module.exports = function app() {
         })
 
         require('./3d/add-lights')(viewer.scene)
-        require('./3d/stars')(viewer)
+        // require('./3d/stars')(viewer)
         var earth = createEarth(viewer, mesh)
-        require('./3d/add-gifts')(viewer, gift)
+        // require('./3d/add-gifts')(viewer, gift)
         var text = require('./3d/add-text')(viewer, font)
         var indicator = require('./3d/click-indicator')(viewer, earth.object3d)
 
